@@ -52,6 +52,20 @@ function testTableForCategoriesBehaviour<T extends object = object>(props: Enfor
 		)).to.be.true;
 	});
 
+	it("every category section should have only one rule row", () => {
+		expect(wrapper.find("tbody").find(DataTableCategorySection).everyWhere(
+			(section) => section.find(DataTableRuleRow).length === 1,
+		)).to.be.true;
+	});
+
+	it("should repass right category to each rule row", () => {
+		expect(
+			wrapper.find(DataTableCategorySection).everyWhere((section) => {
+				return section.find(DataTableRuleRow).props().content === section.props().category;
+			}),
+		).to.be.true;
+	});
+
 	it("should repass label to rule rows", () => {
 		expect(
 			wrapper.find(DataTableRuleRow).everyWhere(
