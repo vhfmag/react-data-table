@@ -105,7 +105,8 @@
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/src/tests/"
+      "/src/tests/",
+      "/src/data/"
     ],
     "mapCoverage": true,
     "collectCoverage": true,
