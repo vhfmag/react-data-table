@@ -13,13 +13,23 @@ export interface IColumn<RowData, CellData = any> {
 	renderCell?: (v: CellData) => React.ReactNode;
 }
 
-export interface IDataTableProps<RowData extends object> extends Partial<typeof classes> {
+export interface IDataTableCoreProps<RowData extends object> extends Partial<typeof classes> {
 	data: RowData[];
 	columns: Array<IColumn<RowData>>;
 
 	idAccessor?: (datum: RowData) => string | number;
 
 	children?: never;
+}
+
+export interface IDataTableCategoryProps<RowData extends object> {
+	categoryAccessor: (row: RowData) => string;
+	categoryLabel?: React.ReactNode;
+}
+
+export interface IDataTableProps<RowData extends object>
+	extends IDataTableCoreProps<RowData>,
+			Partial<IDataTableCategoryProps<RowData>> {
 }
 
 export default class DataTable<RowData extends object> extends React.Component<IDataTableProps<RowData>, {}> {
@@ -41,8 +51,10 @@ export default class DataTable<RowData extends object> extends React.Component<I
 					idAccessor={this.props.idAccessor}
 					rowClassName={this.props.rowClassName}
 					cellClassName={this.props.cellClassName}
-					categoryAccessor={this.props.categoryAccessor}
 					tableBodyClassName={this.props.tableBodyClassName}
+
+					categoryLabel={this.props.categoryLabel}
+					categoryAccessor={this.props.categoryAccessor}
 				/>
 			</table>
 		);

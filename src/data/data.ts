@@ -5,6 +5,7 @@ export interface IEmployee {
 	id: string;
 	age: number;
 	name: string;
+	role: string;
 	birthday: Date;
 	balance: number;
 }
@@ -19,6 +20,8 @@ export const testClasses: typeof classes = {
 	tableHeaderClassName: "tableHeader",
 };
 
+const employeeRoles = [ "CEO", "Senior Dev", "Junior Dev", "Commercial" ];
+
 export const employeeData: IEmployee[] = [...new Array(faker.random.number({ min: 10, max: 30 }))].map((_, i) => {
 	const age = faker.random.number({ min: 18, max: 60 });
 	return {
@@ -26,6 +29,7 @@ export const employeeData: IEmployee[] = [...new Array(faker.random.number({ min
 		id: i + "",
 		name: faker.name.findName(),
 		birthday: faker.date.past(age),
+		role: faker.random.arrayElement(employeeRoles),
 		balance: faker.random.number({ min: 1E3, max: 1E5 }),
 	};
 });

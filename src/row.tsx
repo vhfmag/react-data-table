@@ -1,6 +1,6 @@
 import { IColumn, IDataTableProps } from "./";
 import * as React from "react";
-import { rowClassName, cellClassName } from "./classes";
+import * as classes from "./classes";
 import * as classnames from "classnames";
 
 export interface IDataTableRowProps
@@ -25,18 +25,42 @@ export default class DataTableRow<RowData extends object = object> extends React
 	public render() {
 		return (
 			<tr
-				className={classnames(rowClassName, this.props.rowClassName)}
+				className={classnames(classes.rowClassName, this.props.rowClassName)}
 			>
 				{
 					this.props.columns.map((col) => (
 						<td
-							className={classnames(cellClassName, this.props.cellClassName)}
+							className={classnames(classes.cellClassName, this.props.cellClassName)}
 							key={col.id}
 						>
 							{parseDatum(this.props.datum, col)}
 						</td>
 					))
 				}
+			</tr>
+		);
+	}
+}
+
+export interface IDataTableRuleRowProps extends Partial<Pick<typeof classes, "ruleRowClassName" | "cellClassName">> {
+	colSpan: number;
+	content: string;
+	label?: React.ReactNode;
+}
+
+export class DataTableRuleRow extends React.PureComponent<IDataTableRuleRowProps, {}> {
+	public render() {
+		return (
+			<tr
+				className={classnames(this.props.ruleRowClassName, classes.ruleRowClassName)}
+			>
+				<td
+					colSpan={this.props.colSpan}
+					className={classnames(this.props.cellClassName, classes.cellClassName)}
+				>
+					{this.props.label && (<span><b>{this.props.label}</b>: </span>)}
+					{this.props.content}
+				</td>
 			</tr>
 		);
 	}

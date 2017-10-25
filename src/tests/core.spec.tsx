@@ -3,13 +3,13 @@ import "jest";
 import { expect } from "chai";
 
 import * as React from "react";
+import { shouldntThrowWithProps, testEnvironment } from "./assertions";
 import { emptyProps, employeePropsWithId, employeePropsWithoutId } from "../data/core.props";
 
-import { configure, mount, ReactWrapper } from "enzyme";
+import { mount, ReactWrapper } from "enzyme";
 import DataTable, { IDataTableProps } from "../";
-import * as Adapter from "enzyme-adapter-react-16";
 
-configure({ adapter: new Adapter() });
+import "./setup";
 
 import {
 	tableRowsShouldHaveNCells,
@@ -22,15 +22,23 @@ import {
 	testIdAccessor,
 } from "./core.assertions";
 
-function shouldntThrowWithProps<Props>(props: Props, Component: React.ComponentClass<Props>) {
-	it("should pass shallow smoke test", function() {
-		mount(<Component {...props}/>);
+function tableShouldRenderTableTag<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
+	it("should have a single <table> tag", function() {
+		expect(wrapper.find("table")).to.have.length(1);
 	});
 }
 
-function tableShouldRenderSuccesfully<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
-	it("should have a single <table> tag", function() {
-		expect(wrapper.find("table")).to.have.length(1);
+function tableShouldRenderCorrectTags<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
+	const props = wrapper.props();
+
+	describe("should render correct table-related tags", () => {
+		tableShouldHaveTBody(wrapper);
+		tableShouldHaveTHead(wrapper);
+		tableShouldRenderTableTag(wrapper);
+
+		tableShouldHaveNRows(wrapper, props.data.length);
+		tableShouldHaveNColumns(wrapper, props.columns.length);
+		tableRowsShouldHaveNCells(wrapper, props.columns.length);
 	});
 }
 
@@ -38,17 +46,10 @@ function testTableWithProps<T extends object = object>(props: IDataTableProps<T>
 	shouldntThrowWithProps(props, DataTable);
 	const wrapper = mount(<DataTable {...props}/>);
 
-	tableShouldRenderSuccesfully(wrapper);
+	tableShouldRenderCorrectTags(wrapper);
 
 	testTableDefaultClasses(wrapper);
 	testTableClasses(wrapper, props, "props'");
-
-	tableShouldHaveTBody(wrapper);
-	tableShouldHaveTHead(wrapper);
-
-	tableShouldHaveNRows(wrapper, props.data.length);
-	tableShouldHaveNColumns(wrapper, props.columns.length);
-	tableRowsShouldHaveNCells(wrapper, props.columns.length);
 
 	testTableContentWithProps(wrapper);
 	testIdAccessor(wrapper);
@@ -87,11 +88,7 @@ function testTableContentWithProps<T extends object = object>(wrapper: ReactWrap
 	});
 }
 
-describe("the environment", function() {
-	it("works, hopefully", function() {
-		expect(true).to.be.true;
-	});
-});
+testEnvironment();
 
 describe("the main component", function() {
 	describe("with empty props", function() {
