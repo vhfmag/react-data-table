@@ -8,7 +8,8 @@ import { shouldntThrowWithProps, testEnvironment } from "./assertions";
 import { categorizedAndLabeledEmployeeProps, categorizedEmployeeProps } from "../data/category.props";
 import { mount } from "enzyme";
 import DataTable, { IDataTableCategoryProps, IDataTableProps } from "../";
-import { DataTableCategorySection } from "../body";
+import DataTableBody, { DataTableCategorySection } from "../body";
+import DataTableHeader from "../header";
 import { ObjectOmit } from "typelevel-ts";
 
 testEnvironment();
@@ -25,13 +26,13 @@ function testTableForCategoriesBehaviour<T extends object = object>(props: Enfor
 
 	it("should have as many categories as category sections", () => {
 		expect(
-			wrapper.find("tbody").find(DataTableCategorySection).length,
+			wrapper.find(DataTableBody).find(DataTableCategorySection).length,
 		).to.be.equal(uniqueCategories.length);
 	});
 
 	it("every regular row inside a category section should have its category", () => {
 		expect(
-			wrapper.find("tbody").find(DataTableCategorySection).everyWhere(
+			wrapper.find(DataTableBody).find(DataTableCategorySection).everyWhere(
 				(section) => {
 					const sectionCategory = section.props().category;
 					return section.find(DataTableRow).everyWhere(
@@ -47,15 +48,19 @@ function testTableForCategoriesBehaviour<T extends object = object>(props: Enfor
 	});
 
 	it("every category section should start with a rule row", () => {
-		expect(wrapper.find("tbody").find(DataTableCategorySection).everyWhere(
+		expect(wrapper.find(DataTableBody).find(DataTableCategorySection).everyWhere(
 			(section) => section.childAt(0).is(DataTableRuleRow),
 		)).to.be.true;
 	});
 
 	it("every category section should have only one rule row", () => {
-		expect(wrapper.find("tbody").find(DataTableCategorySection).everyWhere(
+		expect(wrapper.find(DataTableBody).find(DataTableCategorySection).everyWhere(
 			(section) => section.find(DataTableRuleRow).length === 1,
 		)).to.be.true;
+	});
+
+	it("there should be category sections only inside DataTableBody", () => {
+		expect(wrapper.find(DataTableHeader).find(DataTableCategorySection).length).to.be.equal(0);
 	});
 
 	it("should repass right category to each rule row", () => {

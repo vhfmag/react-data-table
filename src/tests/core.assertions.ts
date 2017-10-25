@@ -1,9 +1,35 @@
+import DataTableBody from "../body";
+import DataTableHeader from "../header";
 import "jest";
 import { expect } from "chai";
 import DataTableRow from "../row";
 import { IDataTableProps } from "..";
 import { ReactWrapper } from "enzyme";
 import * as classes from "../classes";
+
+export function testTableBody<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>)  {
+	describe("DataTableBody", () => {
+		it("should render a single child", () => {
+			expect(wrapper.find(DataTableBody).children().length).to.be.equal(1);
+		});
+
+		it("should render a single <tbody>", () => {
+			expect(wrapper.find(DataTableBody).children().first().is("tbody")).to.be.true;
+		});
+	});
+}
+
+export function testTableHeader<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>)  {
+	describe("DataTableHeader", () => {
+		it("should render a single child", () => {
+			expect(wrapper.find(DataTableHeader).children().length).to.be.equal(1);
+		});
+
+		it("should render a single <thead>", () => {
+			expect(wrapper.find(DataTableHeader).children().first().is("thead")).to.be.true;
+		});
+	});
+}
 
 export function testTableClasses<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>, classNames: Partial<typeof classes>, qualifier: string)  {
 	describe(`should have the right ${qualifier + " "}classes at the right tags`, function() {

@@ -17,9 +17,11 @@ import {
 	tableShouldHaveNRows,
 	tableShouldHaveTBody,
 	tableShouldHaveTHead,
+	testIdAccessor,
+	testTableBody,
 	testTableClasses,
 	testTableDefaultClasses,
-	testIdAccessor,
+	testTableHeader,
 } from "./core.assertions";
 
 function tableShouldRenderTableTag<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
@@ -53,6 +55,9 @@ function testTableWithProps<T extends object = object>(props: IDataTableProps<T>
 
 	testTableContentWithProps(wrapper);
 	testIdAccessor(wrapper);
+
+	testTableBody(wrapper);
+	testTableHeader(wrapper);
 }
 
 function testTableContentWithProps<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
