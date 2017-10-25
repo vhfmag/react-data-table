@@ -22,22 +22,22 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>10/10</span>
+        <span class='fraction'>12/12</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>2/2</span>
+        <span class='fraction'>4/4</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/5</span>
+        <span class='fraction'>6/6</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>10/10</span>
+        <span class='fraction'>12/12</span>
       </div>
     </div>
   </div>
@@ -86,10 +86,34 @@
 41
 42
 43
-44</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -98,26 +122,50 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">270x</span>
+<span class="cline-any cline-yes">862x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">270x</span>
+<span class="cline-any cline-yes">862x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">270x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">862x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">60x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">204x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">240x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">816x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -131,7 +179,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { IColumn, IDataTableProps } from "./";
 import * as React from "react";
-import { rowClassName, cellClassName } from "./classes";
+import * as classes from "./classes";
 import * as classnames from "classnames";
 &nbsp;
 export interface IDataTableRowProps
@@ -156,12 +204,12 @@ export default class DataTableRow&lt;RowData extends object = object&gt; extends
 	public render() {
 		return (
 			&lt;tr
-				className={classnames(rowClassName, this.props.rowClassName)}
+				className={classnames(classes.rowClassName, this.props.rowClassName)}
 			&gt;
 				{
 					this.props.columns.map((col) =&gt; (
 						&lt;td
-							className={classnames(cellClassName, this.props.cellClassName)}
+							className={classnames(classes.cellClassName, this.props.cellClassName)}
 							key={col.id}
 						&gt;
 							{parseDatum(this.props.datum, col)}
@@ -172,13 +220,37 @@ export default class DataTableRow&lt;RowData extends object = object&gt; extends
 		);
 	}
 }
+&nbsp;
+export interface IDataTableRuleRowProps extends Partial&lt;Pick&lt;typeof classes, "ruleRowClassName" | "cellClassName"&gt;&gt; {
+	colSpan: number;
+	content: string;
+	label?: React.ReactNode;
+}
+&nbsp;
+export class DataTableRuleRow extends React.PureComponent&lt;IDataTableRuleRowProps, {}&gt; {
+	public render() {
+		return (
+			&lt;tr
+				className={classnames(this.props.ruleRowClassName, classes.ruleRowClassName)}
+			&gt;
+				&lt;td
+					colSpan={this.props.colSpan}
+					className={classnames(this.props.cellClassName, classes.cellClassName)}
+				&gt;
+					{this.props.label &amp;&amp; (&lt;span&gt;&lt;b&gt;{this.props.label}&lt;/b&gt;: &lt;/span&gt;)}
+					{this.props.content}
+				&lt;/td&gt;
+			&lt;/tr&gt;
+		);
+	}
+}
 &nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 11:19:20 GMT-0300 (BRT)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 14:23:50 GMT-0300 (BRT)
 </div>
 </div>
 <script src="../prettify.js"></script>
