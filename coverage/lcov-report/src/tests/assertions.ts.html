@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/tests/assertions.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">All files</a> / <a href="index.html">src/tests</a> assertions.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>48/48</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>12/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>26/26</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>42/42</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">88x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import "jest";
+import { expect } from "chai";
+import DataTableRow from "../row";
+import { IDataTableProps } from "../";
+import { ReactWrapper } from "enzyme";
+import * as classes from "../classes";
+&nbsp;
+export function testTableClasses&lt;T extends object = object&gt;(wrapper: ReactWrapper&lt;IDataTableProps&lt;T&gt;&gt;, classNames: Partial&lt;typeof classes&gt;, qualifier: string)  {
+	describe(`should have the right ${qualifier + " "}classes at the right tags`, function() {
+		it(`should have the right ${qualifier + " "}class at &lt;table&gt;`, function() {
+			if (classNames.tableClassName) {
+				expect(wrapper.find("table").everyWhere((table) =&gt; table.hasClass(classNames.tableClassName!))).to.be.true;
+			}
+		});
+&nbsp;
+		it(`should have the right ${qualifier + " "}class at &lt;tbody&gt;`, function() {
+			if (classNames.tableBodyClassName) {
+				expect(wrapper.find("tbody").everyWhere((tbody) =&gt; tbody.hasClass(classNames.tableBodyClassName!))).to.be.true;
+			}
+		});
+&nbsp;
+		it(`should have the right ${qualifier + " "}class at &lt;thead&gt;`, function() {
+			if (classNames.tableHeaderClassName) {
+				expect(wrapper.find("thead").everyWhere((thead) =&gt; thead.hasClass(classNames.tableHeaderClassName!))).to.be.true;
+			}
+		});
+&nbsp;
+		it(`should have the right ${qualifier + " "}class at &lt;tr&gt;`, function() {
+			if (classNames.rowClassName) {
+				expect(wrapper.find("tr").everyWhere((tr) =&gt; tr.hasClass(classNames.rowClassName!))).to.be.true;
+			}
+		});
+&nbsp;
+		it(`should have the right ${qualifier + " "}class at &lt;td&gt;`, function() {
+			if (classNames.cellClassName) {
+				expect(wrapper.find("td").everyWhere((td) =&gt; td.hasClass(classNames.cellClassName!))).to.be.true;
+			}
+		});
+&nbsp;
+		it(`should have the right ${qualifier + " "}class at &lt;th&gt;`, function() {
+			if (classNames.headerCellClassName) {
+				expect(wrapper.find("th").everyWhere((th) =&gt; th.hasClass(classNames.headerCellClassName!))).to.be.true;
+			}
+		});
+	});
+}
+&nbsp;
+export function testTableDefaultClasses&lt;T extends object = object&gt;(wrapper: ReactWrapper&lt;IDataTableProps&lt;T&gt;&gt;) {
+	testTableClasses(wrapper, classes, "default");
+}
+&nbsp;
+export function tableShouldHaveTBody&lt;T extends object = object&gt;(wrapper: ReactWrapper&lt;IDataTableProps&lt;T&gt;&gt;) {
+	it(`should have a single &lt;tbody&gt; tag`, function() {
+		expect(wrapper.find("tbody")).to.have.length(1);
+	});
+}
+&nbsp;
+export function tableShouldHaveTHead&lt;T extends object = object&gt;(wrapper: ReactWrapper&lt;IDataTableProps&lt;T&gt;&gt;) {
+	it(`should have a single &lt;thead&gt; tag`, function() {
+		expect(wrapper.find("thead")).to.have.length(1);
+	});
+}
+&nbsp;
+export function tableShouldHaveNRows&lt;T extends object = object&gt;(wrapper: ReactWrapper&lt;IDataTableProps&lt;T&gt;&gt;, n: number) {
+	it(`should have ${n} rows`, function() {
+		expect(
+			wrapper
+				.find("tbody")
+				.find(DataTableRow),
+		).to.have.length(n);
+	});
+}
+&nbsp;
+export function tableShouldHaveNColumns&lt;T extends object = object&gt;(wrapper: ReactWrapper&lt;IDataTableProps&lt;T&gt;&gt;, n: number) {
+	it(`should have ${n} columns`, function() {
+		expect(
+			wrapper.find("thead").find("tr").find("th"),
+		).to.have.length(n);
+	});
+}
+&nbsp;
+export function tableRowsShouldHaveNCells&lt;T extends object = object&gt;(wrapper: ReactWrapper&lt;IDataTableProps&lt;T&gt;&gt;, n: number) {
+	it(`each row should have ${n} cells`, function() {
+		expect(
+			wrapper
+				.find("tbody")
+				.find(DataTableRow)
+				.everyWhere((row) =&gt; row.find("td").length === n),
+		).to.be.true;
+	});
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Oct 25 2017 10:25:29 GMT-0300 (BRT)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

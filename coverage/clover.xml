@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1508940208144" clover="3.2.0">
+  <project timestamp="1508940208145" name="All files">
+    <metrics statements="54" coveredstatements="54" conditionals="4" coveredconditionals="4" methods="18" coveredmethods="18" elements="76" coveredelements="76" complexity="0" loc="54" ncloc="54" packages="2" files="6" classes="6">
+      <package name="src">
+        <metrics statements="38" coveredstatements="38" conditionals="4" coveredconditionals="4" methods="10" coveredmethods="10"/>
+        <file name="body.tsx" path="/home/camembert/cubos/data-table/src/body.tsx">
+          <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+          <line num="1" count="1" type="stmt"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="5" count="1" type="stmt"/>
+          <line num="10" count="1" type="stmt"/>
+          <line num="12" count="6" type="stmt"/>
+          <line num="18" count="80" type="stmt"/>
+        </file>
+        <file name="classes.ts" path="/home/camembert/cubos/data-table/src/classes.ts">
+          <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="1" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="5" count="1" type="stmt"/>
+          <line num="6" count="1" type="stmt"/>
+          <line num="7" count="1" type="stmt"/>
+          <line num="8" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+        </file>
+        <file name="header.tsx" path="/home/camembert/cubos/data-table/src/header.tsx">
+          <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+          <line num="1" count="1" type="stmt"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="11" count="6" type="stmt"/>
+          <line num="20" count="16" type="stmt"/>
+        </file>
+        <file name="index.tsx" path="/home/camembert/cubos/data-table/src/index.tsx">
+          <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+          <line num="1" count="1" type="stmt"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="6" count="1" type="stmt"/>
+          <line num="7" count="1" type="stmt"/>
+          <line num="26" count="1" type="stmt"/>
+          <line num="28" count="6" type="stmt"/>
+        </file>
+        <file name="row.tsx" path="/home/camembert/cubos/data-table/src/row.tsx">
+          <metrics statements="10" coveredstatements="10" conditionals="2" coveredconditionals="2" methods="5" coveredmethods="5"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="13" count="360" type="stmt"/>
+          <line num="17" count="360" type="cond" truecount="2" falsecount="0"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="21" count="360" type="stmt"/>
+          <line num="24" count="1" type="stmt"/>
+          <line num="26" count="80" type="stmt"/>
+          <line num="32" count="320" type="stmt"/>
+        </file>
+      </package>
+      <package name="src.data">
+        <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="8"/>
+        <file name="props.ts" path="/home/camembert/cubos/data-table/src/data/props.ts">
+          <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="8"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="23" count="1" type="stmt"/>
+          <line num="24" count="20" type="stmt"/>
+          <line num="25" count="20" type="stmt"/>
+          <line num="34" count="1" type="stmt"/>
+          <line num="38" count="120" type="stmt"/>
+          <line num="43" count="80" type="stmt"/>
+          <line num="48" count="80" type="stmt"/>
+          <line num="49" count="80" type="stmt"/>
+          <line num="54" count="80" type="stmt"/>
+          <line num="55" count="80" type="stmt"/>
+          <line num="59" count="60" type="stmt"/>
+          <line num="61" count="1" type="stmt"/>
+          <line num="68" count="1" type="stmt"/>
+          <line num="74" count="1" type="stmt"/>
+        </file>
+      </package>
+    </metrics>
+  </project>
+</coverage>

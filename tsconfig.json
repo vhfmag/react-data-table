@@ -1,0 +1,35 @@
+{
+    "buildOnSave": false,
+    "compileOnSave": false,
+    "compilerOptions": {
+        "jsx": "react",
+        "target": "es2017",
+        "sourceMap": true,
+        "module": "esnext",
+        "types": [ "node" ],
+        "skipLibCheck": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "declaration": true,
+        "declarationDir": "./dist/declarations",
+        "strictNullChecks": true,
+        "lib": [ "dom", "es2017" ],
+        "moduleResolution": "node",
+        "noUnusedParameters": true,
+        "removeComments": true,
+        "importHelpers": true,
+        "noEmitHelpers": false,
+        "isolatedModules": false,
+        "pretty": true,
+        "experimentalDecorators": true,
+        "outDir": "./compiled"
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
