@@ -98,7 +98,10 @@
     "transform": {
       "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "coveragePathIgnorePatterns": [ "/node_modules/", "/src/tests/" ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/src/tests/"
+    ],
     "mapCoverage": true,
     "collectCoverage": true,
     "moduleFileExtensions": [
