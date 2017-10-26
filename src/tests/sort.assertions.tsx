@@ -1,3 +1,4 @@
+import DataTableHeader, { DataTableHeaderCell, SortArrow } from "../components/header";
 import { Comparator } from "../utils/sorters";
 import DataTableRow from "../components/row";
 import DataTableBody from "../components/body";
@@ -37,5 +38,46 @@ export function testTableSortFeaturesWithProps<T extends object = object>(props:
 				expect(unorderedData.every((datum, i) => datum === props.data[i])).to.be.true;
 			});
 		}
+
+		describe("<SortArrow/> click behaviour", function() {
+			const sortableColumns = props.columns.filter((col) => col.sortFunction);
+
+			for (const column of sortableColumns) {
+				describe(`Column '${column.id}'`, function() {
+					const columnWrapper = wrapper
+						.find(DataTableHeader)
+						.find(DataTableHeaderCell)
+						.filterWhere((colWrapper) => colWrapper.props().column.id === column.id)
+						.at(0);
+
+					if (!columnWrapper) throw new Error("Column wrapper couldn't be found in tree");
+
+					const sortArrowWrapper = columnWrapper.find(SortArrow);
+
+					if (!sortArrowWrapper) throw new Error("<SortArrow/> couldn't be found inside sortable header cell");
+
+					for (let i = 1; i < 3; i++) {
+						it(`should have right behaviour for click #${i}`, function() {
+							const wasActive = columnWrapper.props().isCurrentlySorted;
+							const wasDescendant = columnWrapper.props().isSortingDescendant;
+
+							sortArrowWrapper.simulate("click");
+							wrapper.update();
+
+							const isActive = columnWrapper.props().isCurrentlySorted;
+							const isDescendant = columnWrapper.props().isSortingDescendant;
+
+							expect(isActive, "should be active after clicking").to.be.true;
+
+							if (wasActive) {
+								expect(wasDescendant !== isDescendant, "should toggle ascendance since it was active before clicking").to.be.true;
+							} else {
+								expect(isDescendant, "shouldn't be descendant after click since it wasn't active before clicking").to.be.false;
+							}
+						});
+					}
+				});
+			}
+		});
 	});
 }
