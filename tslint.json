@@ -178,6 +178,7 @@
         "no-increment-decrement": false,
         "chai-vague-errors": false,
         "no-non-null-assertion": false,
-        "jsx-boolean-value": false
+        "jsx-boolean-value": false,
+        "prefer-array-literal": false
     }
 }
