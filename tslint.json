@@ -1,5 +1,5 @@
 {
-    "extends": ["tslint-react", "tslint-microsoft-contrib"],
+    "extends": ["tslint-microsoft-contrib", "tslint-react"],
     "rules": {
         "align": {
             "options": [
@@ -161,6 +161,12 @@
         },
         "jsx-equals-spacing": "never",
         "jsx-no-multiline": false,
-        "jsx-no-multiline-js": false
+        "jsx-no-multiline-js": false,
+
+        "missing-jsdoc": false,
+        "no-default-export": false,
+        "react-tsx-curly-spacing": false,
+        "no-relative-imports": false,
+        "prefer-template": false
     }
 }
