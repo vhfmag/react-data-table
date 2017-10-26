@@ -87,12 +87,8 @@ export class DataTableHeaderCell<RowData extends object, CellData> extends React
 export default class DataTableHeader<RowData extends object = object> extends React.PureComponent<IDataTableHeaderProps<RowData>, {}> {
 	public render() {
 		return (
-			<thead
-				className={classnames(tableHeaderClassName, this.props.tableHeaderClassName)}
-			>
-				<tr
-					className={classnames(rowClassName, this.props.rowClassName)}
-				>
+			<thead className={classnames(tableHeaderClassName, this.props.tableHeaderClassName)}>
+				<tr className={classnames(rowClassName, this.props.rowClassName)}>
 					{
 						this.props.columns.map((column) => (
 							<DataTableHeaderCell
