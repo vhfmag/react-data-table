@@ -1,3 +1,4 @@
+import { Sorter } from "./utils/sorters";
 import * as React from "react";
 import * as classnames from "classnames";
 
@@ -11,6 +12,7 @@ export interface IColumn<RowData, CellData = any> {
 	label: string | null;
 	accessor: (v: RowData) => CellData;
 	renderCell?: (v: CellData) => React.ReactNode;
+	sortFunction?: Sorter<CellData>;
 }
 
 export interface IDataTableCoreProps<RowData extends object> extends Partial<typeof classes> {
@@ -27,9 +29,19 @@ export interface IDataTableCategoryProps<RowData extends object> {
 	categoryLabel?: React.ReactNode;
 }
 
+export interface IDataTableSortProps {
+	defaultSort?: string;
+}
+
 export interface IDataTableProps<RowData extends object>
 	extends IDataTableCoreProps<RowData>,
-			Partial<IDataTableCategoryProps<RowData>> {
+			Partial<IDataTableCategoryProps<RowData>>,
+			Partial<IDataTableSortProps> {
+}
+
+export interface IDataTableState {
+	currentSortedColumn?: string;
+	isSortingAscendant?: boolean;
 }
 
 export default class DataTable<RowData extends object> extends React.Component<IDataTableProps<RowData>, {}> {
