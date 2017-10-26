@@ -31,6 +31,12 @@ function generateColumnsWithFeatures(options: IPropsOptions): Array<IColumn<IEmp
 			sortFunction: options.sortable ? numberSorter : undefined,
 		},
 		{
+			id: "state",
+			label: "Estado",
+			accessor: (row) => row.state,
+			sortFunction: options.sortable ? stringSorter : undefined,
+		},
+		{
 			id: "birthday",
 			label: "Nascimento",
 			accessor: (row) => row.birthday,
