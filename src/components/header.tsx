@@ -91,13 +91,13 @@ export class DataTableHeaderCell<RowData extends object, CellData> extends React
 }
 
 export default class DataTableHeader<RowData extends object = object> extends React.PureComponent<IDataTableHeaderProps<RowData>, {}> {
-	private static getColumnsLevel<T extends object>(cols: ReadonlyArray<IColumn<T>>, level: number): ReadonlyArray<IColumn<T>> {
+	private static getColumnsOfLevel<T extends object>(cols: ReadonlyArray<IColumn<T>>, level: number): ReadonlyArray<IColumn<T>> {
 		if (level === 0) {
 			return cols;
 		} else if (level > 0) {
-			const nextLevel = cols.map((col) => col.columns!).filter((arr) => arr).reduce((acc, arr) => [...acc, ...arr]);
+			const nextLevel = cols.map((col) => col.columns || []).reduce((acc, arr) => [...acc, ...arr]);
 
-			return DataTableHeader.getColumnsLevel(nextLevel, level - 1);
+			return DataTableHeader.getColumnsOfLevel(nextLevel, level - 1);
 		} else {
 			throw new TypeError(`Invalid call to getColumnsLevel - level is negative: ${level}`);
 		}
@@ -105,7 +105,7 @@ export default class DataTableHeader<RowData extends object = object> extends Re
 
 	public render() {
 		const rowSpan = getColumnsMaxRowSpan(this.props.columns);
-		const levels = [...new Array(rowSpan)].map((_, i) => DataTableHeader.getColumnsLevel(this.props.columns, i));
+		const levels = [...new Array(rowSpan)].map((_, i) => DataTableHeader.getColumnsOfLevel(this.props.columns, i));
 		const rowSpans = levels.map(getColumnsMaxRowSpan);
 
 		return (
