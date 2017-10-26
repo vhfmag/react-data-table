@@ -8,6 +8,7 @@ export interface IEmployee {
 	role: string;
 	birthday: Date;
 	balance: number;
+	state: string | undefined;
 }
 
 export const testClasses: typeof classes = {
@@ -20,16 +21,19 @@ export const testClasses: typeof classes = {
 	tableHeaderClassName: "tableHeader",
 };
 
+const stateRoles = [ "Bahia", "São Paulo", "Sergipe", undefined ];
 const employeeRoles = [ "CEO", "Senior Dev", "Junior Dev", "Commercial" ];
 
-export const employeeData: IEmployee[] = [...new Array(faker.random.number({ min: 10, max: 30 }))].map((_, i) => {
-	const age = faker.random.number({ min: 18, max: 60 });
+export const employeeData: IEmployee[] = [...new Array(faker.random.number({ min: 30, max: 50 }))].map((_, i) => {
+	const age = faker.random.number({ min: 18, max: 100 });
+
 	return {
 		age,
 		id: i + "",
 		name: faker.name.findName(),
 		birthday: faker.date.past(age),
+		state: faker.random.arrayElement(stateRoles),
 		role: faker.random.arrayElement(employeeRoles),
-		balance: faker.random.number({ min: 1E3, max: 1E5 }),
+		balance: faker.random.number({ min: 1E3, max: 1E5, precision: 1E-2 }),
 	};
 });
