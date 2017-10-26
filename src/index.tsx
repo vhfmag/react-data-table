@@ -3,9 +3,9 @@ import * as React from "react";
 import * as classnames from "classnames";
 
 import DataTableBody from "./components/body";
-import * as classes from "./utils/rootClassNames";
+import * as classes from "./utils/publicClassNames";
 import DataTableHeader from "./components/header";
-import { tableClassName } from "./utils/rootClassNames";
+import { tableClassName } from "./utils/publicClassNames";
 
 import { decorate } from "core-decorators";
 
@@ -14,8 +14,8 @@ const moize = require("moize");
 export interface IColumn<RowData, CellData = any> {
 	id: string;
 	label: string | null;
-	accessor: (v: RowData) => CellData;
-	renderCell?: (v: CellData) => React.ReactNode;
+	accessor(v: RowData): CellData;
+	renderCell?(v: CellData): React.ReactNode;
 	sortFunction?: Comparator<CellData>;
 }
 
@@ -23,13 +23,13 @@ export interface IDataTableCoreProps<RowData extends object> extends Partial<typ
 	data: ReadonlyArray<RowData>;
 	columns: ReadonlyArray<IColumn<RowData>>;
 
-	idAccessor?: (datum: RowData) => string | number;
+	idAccessor?(datum: RowData): string | number;
 
 	children?: never;
 }
 
 export interface IDataTableCategoryProps<RowData extends object> {
-	categoryAccessor: (row: RowData) => string;
+	categoryAccessor(row: RowData): string;
 	categoryLabel?: React.ReactNode;
 }
 
@@ -65,6 +65,7 @@ export default class DataTable<RowData extends object> extends React.Component<I
 		} else {
 			const accessor = column.accessor;
 			const sorter = column.sortFunction;
+
 			return [...data].sort((t1, t2) => (descendant ? -1 : 1) * sorter(accessor(t1), accessor(t2)));
 		}
 	}

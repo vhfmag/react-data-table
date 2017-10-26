@@ -1,5 +1,5 @@
 import * as faker from "faker";
-import * as classes from "../utils/rootClassNames";
+import * as classes from "../utils/publicClassNames";
 
 export interface IEmployee {
 	id: string;

@@ -4,7 +4,7 @@ import "jest";
 import "./setup.ts";
 import { expect } from "chai";
 import DataTableRow, { parseDatum } from "../components/row";
-import * as classes from "../utils/rootClassNames";
+import * as publicClasses from "../utils/publicClassNames";
 import { shouldntThrowWithProps } from "./assertions";
 
 import * as React from "react";
@@ -88,7 +88,7 @@ function testTableHeader<T extends object = object>(wrapper: ReactWrapper<IDataT
 	});
 }
 
-function testTableClasses<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>, classNames: Partial<typeof classes>, qualifier: string)  {
+function testTablePublicClassNames<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>, classNames: Partial<typeof publicClasses>, qualifier: string)  {
 	describe(`should have the right ${qualifier + " "}classes at the right tags`, function() {
 		it(`should have the right ${qualifier + " "}class at <table>`, function() {
 			if (classNames.tableClassName) {
@@ -129,17 +129,17 @@ function testTableClasses<T extends object = object>(wrapper: ReactWrapper<IData
 }
 
 function testTableDefaultClasses<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
-	testTableClasses(wrapper, classes, "default");
+	testTablePublicClassNames(wrapper, publicClasses, "default");
 }
 
 function tableShouldHaveTBody<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
-	it(`should have a single <tbody> tag`, function() {
+	it("should have a single <tbody> tag", function() {
 		expect(wrapper.find("tbody")).to.have.length(1);
 	});
 }
 
 function tableShouldHaveTHead<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
-	it(`should have a single <thead> tag`, function() {
+	it("should have a single <thead> tag", function() {
 		expect(wrapper.find("thead")).to.have.length(1);
 	});
 }
@@ -201,7 +201,7 @@ export function testTableCoreFeaturesWithProps<T extends object = object>(props:
 		tableShouldRenderCorrectTags(wrapper);
 
 		testTableDefaultClasses(wrapper);
-		testTableClasses(wrapper, props, "props'");
+		testTablePublicClassNames(wrapper, props, "props'");
 
 		testTableContentWithProps(wrapper);
 		testIdAccessor(wrapper);
