@@ -1,4 +1,4 @@
-import { Sorter } from "./utils/sorters";
+import { Comparator } from "./utils/sorters";
 import * as React from "react";
 import * as classnames from "classnames";
 
@@ -7,17 +7,21 @@ import * as classes from "./classes";
 import DataTableHeader from "./header";
 import { tableClassName } from "./classes";
 
+import { decorate } from "core-decorators";
+
+const moize = require("moize");
+
 export interface IColumn<RowData, CellData = any> {
 	id: string;
 	label: string | null;
 	accessor: (v: RowData) => CellData;
 	renderCell?: (v: CellData) => React.ReactNode;
-	sortFunction?: Sorter<CellData>;
+	sortFunction?: Comparator<CellData>;
 }
 
 export interface IDataTableCoreProps<RowData extends object> extends Partial<typeof classes> {
-	data: RowData[];
-	columns: Array<IColumn<RowData>>;
+	data: ReadonlyArray<RowData>;
+	columns: ReadonlyArray<IColumn<RowData>>;
 
 	idAccessor?: (datum: RowData) => string | number;
 
@@ -41,11 +45,37 @@ export interface IDataTableProps<RowData extends object>
 
 export interface IDataTableState {
 	currentSortedColumn?: string;
-	isSortingAscendant?: boolean;
+	isSortingDescendant: boolean;
 }
 
-export default class DataTable<RowData extends object> extends React.Component<IDataTableProps<RowData>, {}> {
+export default class DataTable<RowData extends object> extends React.Component<IDataTableProps<RowData>, IDataTableState> {
+	constructor(props: IDataTableProps<RowData>) {
+		super(props);
+
+		this.state = {
+			isSortingDescendant: false,
+			currentSortedColumn: this.props.defaultSort,
+		};
+	}
+
+	@decorate(moize({ maxSize: 1 }))
+	private getSortedData<CellData>(data: ReadonlyArray<RowData>, column: IColumn<RowData, CellData> | undefined, descendant: boolean) {
+		if (!column || !column.sortFunction) {
+			return data;
+		} else {
+			const accessor = column.accessor;
+			const sorter = column.sortFunction;
+			return [...data].sort((t1, t2) => (descendant ? -1 : 1) * sorter(accessor(t1), accessor(t2)));
+		}
+	}
+
 	public render() {
+		const sortedData = this.getSortedData(
+			this.props.data,
+			this.props.columns.find((col) => col.id === this.state.currentSortedColumn),
+			this.state.isSortingDescendant,
+		);
+
 		return (
 			<table
 				className={classnames(tableClassName, this.props.tableClassName)}
@@ -58,7 +88,7 @@ export default class DataTable<RowData extends object> extends React.Component<I
 				/>
 
 				<DataTableBody
-					data={this.props.data}
+					data={sortedData}
 					columns={this.props.columns}
 					idAccessor={this.props.idAccessor}
 					rowClassName={this.props.rowClassName}
