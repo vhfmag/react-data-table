@@ -24,7 +24,7 @@ export const testClasses: typeof classes = {
 const stateRoles = [ "Bahia", "São Paulo", "Sergipe", undefined ];
 const employeeRoles = [ "CEO", "Senior Dev", "Junior Dev", "Commercial" ];
 
-export const employeeData: IEmployee[] = [...new Array(faker.random.number({ min: 30, max: 50 }))].map((_, i) => {
+export const employeeData: IEmployee[] = [...new Array(faker.random.number({ min: 1E2, max: 2E2 }))].map((_, i) => {
 	const age = faker.random.number({ min: 18, max: 100 });
 
 	return {
