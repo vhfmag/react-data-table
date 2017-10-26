@@ -6,12 +6,12 @@ import "jest";
 import "./setup.ts";
 import { shouldntThrowWithProps } from "./assertions";
 import * as React from "react";
-import { mount } from "enzyme";
+import { mount, ReactWrapper } from "enzyme";
 import { expect } from "chai";
 
-function isSorted<T>(arr: T[], sorter: Comparator<T>) {
+function isSorted<T>(arr: ReadonlyArray<T>, sorter: Comparator<T>, descendant?: boolean) {
 	for (let i = 0; i < arr.length - 1; i++) {
-		if (sorter(arr[i], arr[i + 1]) > 0) return false;
+		if ((descendant ? -1 : 1) * sorter(arr[i], arr[i + 1]) > 0) return false;
 	}
 
 	return true;
@@ -19,11 +19,19 @@ function isSorted<T>(arr: T[], sorter: Comparator<T>) {
 
 import DataTable, { IDataTableProps } from "../";
 
+function getColumnWrapperById<T extends object>(wrapper: ReactWrapper<IDataTableProps<T>>, columnId: string) {
+	return wrapper
+		.find(DataTableHeader)
+		.find(DataTableHeaderCell)
+		.filterWhere((colWrapper) => colWrapper.props().column.id === columnId)
+		.at(0);
+}
+
 export function testTableSortFeaturesWithProps<T extends object = object>(props: IDataTableProps<T>, descriptor: string) {
 	describe(`with props for the given features: ${descriptor}`, function() {
 		shouldntThrowWithProps(props, DataTable);
 
-		const wrapper = mount(<DataTable {...props}/>);
+		let wrapper = mount(<DataTable {...props}/>);
 
 		const unorderedData = wrapper.find(DataTableBody).find(DataTableRow).map((row) => row.props().datum);
 		const defaultSortedColumn = props.columns.find((col) => col.id === props.defaultSort);
@@ -44,28 +52,25 @@ export function testTableSortFeaturesWithProps<T extends object = object>(props:
 
 			for (const column of sortableColumns) {
 				describe(`Column '${column.id}'`, function() {
-					const columnWrapper = wrapper
-						.find(DataTableHeader)
-						.find(DataTableHeaderCell)
-						.filterWhere((colWrapper) => colWrapper.props().column.id === column.id)
-						.at(0);
 
-					if (!columnWrapper) throw new Error("Column wrapper couldn't be found in tree");
-
-					const sortArrowWrapper = columnWrapper.find(SortArrow);
-
-					if (!sortArrowWrapper) throw new Error("<SortArrow/> couldn't be found inside sortable header cell");
-
-					for (let i = 1; i < 3; i++) {
+					for (let i = 1; i < 5; i++) {
 						it(`should have right behaviour for click #${i}`, function() {
+							const columnWrapper = getColumnWrapperById(wrapper, column.id);
+							if (!columnWrapper) throw new Error("Column wrapper couldn't be found in tree");
+
+							const sortArrowWrapper = columnWrapper.find(SortArrow);
+							if (!sortArrowWrapper) throw new Error("<SortArrow/> couldn't be found inside sortable header cell");
+
 							const wasActive = columnWrapper.props().isCurrentlySorted;
 							const wasDescendant = columnWrapper.props().isSortingDescendant;
 
 							sortArrowWrapper.simulate("click");
-							wrapper.update();
+							wrapper = wrapper.update();
 
-							const isActive = columnWrapper.props().isCurrentlySorted;
-							const isDescendant = columnWrapper.props().isSortingDescendant;
+							const updatedColumnWrapper = getColumnWrapperById(wrapper, column.id);
+
+							const isActive = updatedColumnWrapper.props().isCurrentlySorted;
+							const isDescendant = updatedColumnWrapper.props().isSortingDescendant;
 
 							expect(isActive, "should be active after clicking").to.be.true;
 
@@ -74,6 +79,18 @@ export function testTableSortFeaturesWithProps<T extends object = object>(props:
 							} else {
 								expect(isDescendant, "shouldn't be descendant after click since it wasn't active before clicking").to.be.false;
 							}
+
+							const accessor = updatedColumnWrapper.props().column.accessor;
+							const sorter = updatedColumnWrapper.props().column.sortFunction!;
+							const sortedRows = wrapper.find(DataTableBody).props().data;
+							expect(
+								isSorted(
+									sortedRows,
+									(t1, t2) => sorter(accessor(t1), accessor(t2)),
+									isDescendant,
+								),
+								"results should be sorted after clicking",
+							);
 						});
 					}
 				});
