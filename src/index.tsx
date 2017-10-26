@@ -3,9 +3,9 @@ import * as React from "react";
 import * as classnames from "classnames";
 
 import DataTableBody from "./components/body";
-import * as classes from "./utils/classes";
+import * as classes from "./utils/rootClassNames";
 import DataTableHeader from "./components/header";
-import { tableClassName } from "./utils/classes";
+import { tableClassName } from "./utils/rootClassNames";
 
 import { decorate } from "core-decorators";
 

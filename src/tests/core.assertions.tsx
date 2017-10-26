@@ -4,7 +4,7 @@ import "jest";
 import "./setup.ts";
 import { expect } from "chai";
 import DataTableRow, { parseDatum } from "../components/row";
-import * as classes from "../utils/classes";
+import * as classes from "../utils/rootClassNames";
 import { shouldntThrowWithProps } from "./assertions";
 
 import * as React from "react";

@@ -1,4 +1,4 @@
-import { headerCellClassName, rowClassName, tableHeaderClassName } from "../utils/classes";
+import { headerCellClassName, rowClassName, tableHeaderClassName } from "../utils/rootClassNames";
 import * as React from "react";
 import { IDataTableProps } from "..";
 import * as classnames from "classnames";

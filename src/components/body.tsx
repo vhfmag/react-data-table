@@ -3,7 +3,7 @@ import * as React from "react";
 import * as classnames from "classnames";
 import DataTableRow, { DataTableRuleRow } from "./row";
 import { IDataTableProps } from "..";
-import { tableBodyClassName } from "../utils/classes";
+import { tableBodyClassName } from "../utils/rootClassNames";
 import { ObjectOmit } from "typelevel-ts";
 import groupBy = require("lodash/groupBy");
 import { createSelector } from "reselect";
