@@ -1,5 +1,5 @@
 {
-    "extends": ["tslint-react"],
+    "extends": ["tslint-react", "tslint-microsoft-contrib"],
     "rules": {
         "align": {
             "options": [
