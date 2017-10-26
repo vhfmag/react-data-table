@@ -3,7 +3,8 @@ import * as React from "react";
 import { IDataTableProps } from "./";
 import * as classnames from "classnames";
 
-export interface IDataTableHeaderProps<RowData extends object> extends Pick<IDataTableProps<RowData>, "columns" | "headerCellClassName" | "tableHeaderClassName" | "rowClassName"> {
+export interface IDataTableHeaderProps<RowData extends object>
+	extends Pick<IDataTableProps<RowData>, "columns" | "headerCellClassName" | "tableHeaderClassName" | "rowClassName"> {
 }
 
 export default class DataTableHeader<RowData extends object = object> extends React.PureComponent<IDataTableHeaderProps<RowData>, {}> {

@@ -1,6 +1,6 @@
 export type Maybe<T> = T | null | undefined;
-export type Sorter<T> = (t1: Maybe<T>, t2: Maybe<T>) => number;
-export type OptimisticSorter<T> = (t1: T, t2: T) => number;
+export type Comparator<T> = (t1: Maybe<T>, t2: Maybe<T>) => number;
+export type OptimisticComparator<T> = (t1: T, t2: T) => number;
 
 function isSome<T>(t: Maybe<T>): t is T {
 	return t !== undefined && t !== null;
@@ -18,7 +18,7 @@ function defaultNoneSorter<T>(t1: Maybe<T>, t2: Maybe<T>) {
 	}
 }
 
-function sortWrapper<T>(sorter: OptimisticSorter<T>) {
+function sortWrapper<T>(sorter: OptimisticComparator<T>) {
 	return (t1: Maybe<T>, t2: Maybe<T>) => {
 		if (isSome(t1) && isSome(t2)) {
 			return sorter(t1, t2);
@@ -28,6 +28,6 @@ function sortWrapper<T>(sorter: OptimisticSorter<T>) {
 	};
 }
 
-export const numberSorter: Sorter<number> = sortWrapper((t1, t2) => t1 - t2);
-export const stringSorter: Sorter<string> = sortWrapper((t1, t2) => t1.localeCompare(t2));
-export const dateSorter: Sorter<Date> = sortWrapper((t1, t2) => t1.valueOf() - t2.valueOf());
+export const numberSorter: Comparator<number> = sortWrapper((t1, t2) => t1 - t2);
+export const stringSorter: Comparator<string> = sortWrapper((t1, t2) => t1.localeCompare(t2));
+export const dateSorter: Comparator<Date> = sortWrapper((t1, t2) => t1.valueOf() - t2.valueOf());

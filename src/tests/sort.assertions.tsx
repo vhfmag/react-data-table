@@ -1,4 +1,4 @@
-import { Sorter } from "../utils/sorters";
+import { Comparator } from "../utils/sorters";
 import DataTableRow from "../row";
 import DataTableBody from "../body";
 import "jest";
@@ -8,7 +8,7 @@ import * as React from "react";
 import { mount } from "enzyme";
 import { expect } from "chai";
 
-function isSorted<T>(arr: T[], sorter: Sorter<T>) {
+function isSorted<T>(arr: T[], sorter: Comparator<T>) {
 	for (let i = 0; i < arr.length - 1; i++) {
 		if (sorter(arr[i], arr[i + 1]) > 0) return false;
 	}
