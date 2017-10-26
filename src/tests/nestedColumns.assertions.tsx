@@ -21,15 +21,15 @@ function testColumnsForRowSpan<T extends object = object>(cols: ReadonlyArray<IC
 
 			if (col.columns) {
 				const nestedColumns = col.columns;
+				const nestedRowSpan = getColumnsMaxRowSpan(nestedColumns);
 
-				describe("For parent column, row span should be equal to (level's span - children's span)", function() {
-					const nestedRowSpan = getColumnsMaxRowSpan(nestedColumns);
+				it(`For parent column, row span should be equal to level's span (${maxRowSpan}) - children's span (${nestedRowSpan})`, function() {
 					expect(colWrapper.find("th").props().rowSpan).to.be.equal(maxRowSpan - nestedRowSpan);
 				});
 
 				testColumnsForRowSpan(nestedColumns, wrapper, level + 1);
 			} else {
-				describe("For final column, row span should be equal to level's span", function() {
+				it(`For final column, row span should be equal to level's span (${maxRowSpan})`, function() {
 					expect(colWrapper.find("th").props().rowSpan).to.be.equal(maxRowSpan);
 				});
 			}
