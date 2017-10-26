@@ -1,3 +1,4 @@
+import { getColumnsColSpan, getColumnsMaxRowSpan } from "../utils/helpers";
 import {
 	activeSortArrowClassName,
 	ascendantSortArrowClassName,
@@ -58,6 +59,9 @@ export interface IDataTableHeaderCellProps<RowData extends object, CellData>
 	extends Pick<IDataTableHeaderProps<RowData>, "isSortingDescendant" | "headerCellClassName" | "onChangeSorting"> {
 	column: IColumn<RowData, CellData>;
 	isCurrentlySorted: boolean;
+
+	rowSpan?: number;
+	colSpan?: number;
 }
 
 export class DataTableHeaderCell<RowData extends object, CellData> extends React.Component<IDataTableHeaderCellProps<RowData, CellData>> {
@@ -65,6 +69,8 @@ export class DataTableHeaderCell<RowData extends object, CellData> extends React
 		return (
 			<th
 				key={this.props.column.id}
+				rowSpan={this.props.rowSpan || 1}
+				colSpan={this.props.colSpan || 1}
 				className={classnames(headerCellClassName, this.props.headerCellClassName)}
 			>
 				{this.props.column.label}
@@ -85,23 +91,46 @@ export class DataTableHeaderCell<RowData extends object, CellData> extends React
 }
 
 export default class DataTableHeader<RowData extends object = object> extends React.PureComponent<IDataTableHeaderProps<RowData>, {}> {
+	private static getColumnsLevel<T extends object>(cols: ReadonlyArray<IColumn<T>>, level: number): ReadonlyArray<IColumn<T>> {
+		if (level === 0) {
+			return cols;
+		} else if (level > 0) {
+			const nextLevel = cols.map((col) => col.columns!).filter((arr) => arr).reduce((acc, arr) => [...acc, ...arr]);
+
+			return DataTableHeader.getColumnsLevel(nextLevel, level - 1);
+		} else {
+			throw new TypeError(`Invalid call to getColumnsLevel - level is negative: ${level}`);
+		}
+	}
+
 	public render() {
+		const rowSpan = getColumnsMaxRowSpan(this.props.columns);
+		const levels = [...new Array(rowSpan)].map((_, i) => DataTableHeader.getColumnsLevel(this.props.columns, i));
+		const rowSpans = levels.map(getColumnsMaxRowSpan);
+
 		return (
 			<thead className={classnames(tableHeaderClassName, this.props.tableHeaderClassName)}>
-				<tr className={classnames(rowClassName, this.props.rowClassName)}>
-					{
-						this.props.columns.map((column) => (
-							<DataTableHeaderCell
-								key={column.id}
-								column={column}
-								onChangeSorting={this.props.onChangeSorting}
-								isSortingDescendant={this.props.isSortingDescendant}
-								headerCellClassName={this.props.headerCellClassName}
-								isCurrentlySorted={this.props.currentlySortedColumn === column.id}
-							/>
-						))
-					}
-				</tr>
+				{
+					levels.map((rowColumns, level) => (
+						<tr key={level} className={classnames(rowClassName, this.props.rowClassName)}>
+							{
+								rowColumns.map((column) => (
+									<DataTableHeaderCell
+										key={column.id}
+										column={column}
+										onChangeSorting={this.props.onChangeSorting}
+										isSortingDescendant={this.props.isSortingDescendant}
+										headerCellClassName={this.props.headerCellClassName}
+										isCurrentlySorted={this.props.currentlySortedColumn === column.id}
+
+										colSpan={column.columns && getColumnsColSpan(column.columns)}
+										rowSpan={column.columns ? (rowSpans[level] - getColumnsMaxRowSpan(column.columns)) : rowSpans[level]}
+									/>
+								))
+							}
+						</tr>
+					))
+				}
 			</thead>
 		);
 	}

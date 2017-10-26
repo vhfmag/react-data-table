@@ -1,3 +1,4 @@
+import { flattenColumnsWithContent } from "./utils/helpers";
 import { Comparator } from "./utils/sorters";
 import * as React from "react";
 import * as classnames from "classnames";
@@ -8,6 +9,7 @@ import DataTableHeader from "./components/header";
 import { tableClassName } from "./utils/publicClassNames";
 
 import { decorate } from "core-decorators";
+import { createSelector } from "reselect";
 
 const moize = require("moize");
 
@@ -17,6 +19,8 @@ export interface IColumn<RowData, CellData = any> {
 	accessor(v: RowData): CellData;
 	renderCell?(v: CellData): React.ReactNode;
 	sortFunction?: Comparator<CellData>;
+
+	columns?: ReadonlyArray<IColumn<CellData, any>>;
 }
 
 export interface IDataTableCoreProps<RowData extends object> extends Partial<typeof classes> {
@@ -58,6 +62,11 @@ export default class DataTable<RowData extends object> extends React.Component<I
 		};
 	}
 
+	private getFlattenedColumns = createSelector(
+		(props: IDataTableProps<RowData>) => props.columns,
+		flattenColumnsWithContent,
+	);
+
 	@decorate(moize({ maxSize: 1 }))
 	private getSortedData<CellData>(data: ReadonlyArray<RowData>, column: IColumn<RowData, CellData> | undefined, descendant: boolean) {
 		if (!column || !column.sortFunction) {
@@ -81,6 +90,8 @@ export default class DataTable<RowData extends object> extends React.Component<I
 			this.state.isSortingDescendant,
 		);
 
+		const flattenedColumns = this.getFlattenedColumns(this.props);
+
 		return (
 			<table
 				className={classnames(tableClassName, this.props.tableClassName)}
@@ -98,7 +109,7 @@ export default class DataTable<RowData extends object> extends React.Component<I
 
 				<DataTableBody
 					data={sortedData}
-					columns={this.props.columns}
+					columns={flattenedColumns}
 					idAccessor={this.props.idAccessor}
 					rowClassName={this.props.rowClassName}
 					cellClassName={this.props.cellClassName}

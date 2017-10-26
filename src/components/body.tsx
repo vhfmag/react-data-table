@@ -1,4 +1,4 @@
-import { getColSpan } from "../utils/helpers";
+import { getColumnsColSpan } from "../utils/helpers";
 import * as React from "react";
 import * as classnames from "classnames";
 import DataTableRow, { DataTableRuleRow } from "./row";
@@ -40,7 +40,7 @@ export class DataTableCategorySection<RowData extends object> extends React.Pure
 					key="rule"
 					content={this.props.category}
 					label={this.props.categoryLabel}
-					colSpan={getColSpan(this.props.columns)}
+					colSpan={getColumnsColSpan(this.props.columns)}
 					cellClassName={this.props.cellClassName}
 				/>
 			),
@@ -53,7 +53,7 @@ export default class DataTableBody<RowData extends object = object> extends Reac
 	protected groupRowsByCategory = createSelector(
 		(props: IDataTableBodyProps<RowData>) => props.data,
 		(props: IDataTableBodyProps<RowData>) => props.categoryAccessor,
-		(data: RowData[], categoryAccesor: IDataTableBodyProps<RowData>["categoryAccessor"]) => groupBy<RowData>(data, categoryAccesor),
+		groupBy,
 	);
 
 	public render() {

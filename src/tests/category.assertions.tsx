@@ -30,10 +30,12 @@ export function testTableCategoryFeaturesWithProps<T extends object = object>(pr
 				wrapper.find(DataTableBody).find(DataTableCategorySection).everyWhere(
 					(section) => {
 						const sectionCategory = section.props().category;
+
 						return section.find(DataTableRow).everyWhere(
 							(row) => {
 								const datum = row.props().datum;
 								const rowCategory = wrapper.props().categoryAccessor!(datum);
+
 								return rowCategory === sectionCategory;
 							},
 						);

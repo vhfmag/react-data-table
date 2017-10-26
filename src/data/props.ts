@@ -1,6 +1,6 @@
 import { dateSorter, numberSorter, stringSorter } from "../utils/sorters";
 import { IColumn, IDataTableCategoryProps, IDataTableCoreProps, IDataTableProps, IDataTableSortProps } from "..";
-import { IEmployee, employeeData, testClasses } from "./data";
+import { employeeData, IBalance, IEmployee, testClasses } from "./data";
 
 export interface IPropsOptions {
 	// core features
@@ -14,16 +14,60 @@ export interface IPropsOptions {
 	// sorting features
 	sortable?: boolean;
 	defaultSort?: boolean;
+
+	// nested columns
+	nestedColumns?: boolean;
 }
 
-function generateColumnsWithFeatures(options: IPropsOptions): Array<IColumn<IEmployee>> {
+function generateBalanceColumns(options: IPropsOptions, idPrefix: string): ReadonlyArray<IColumn<IBalance>> {
 	return [
 		{
-			id: "nome",
-			label: "Nome",
-			accessor: (row) => row.name,
-			sortFunction: options.sortable ? stringSorter : undefined,
+			label: "A pagar",
+			id: `${idPrefix}.toPay`,
+			accessor: (balance) => balance.toPay,
+			sortFunction: options.sortable ? numberSorter : undefined,
 		},
+		{
+			label: "A receber",
+			id: `${idPrefix}.toReceive`,
+			accessor: (balance) => balance.toReceive,
+			sortFunction: options.sortable ? numberSorter : undefined,
+		},
+	];
+}
+
+function generateColumnsWithFeatures(options: IPropsOptions): ReadonlyArray<IColumn<IEmployee>> {
+	return [
+		...(
+			options.nestedColumns ? [
+				{
+					id: "nomecompleto",
+					label: "Nome completo",
+					accessor: (row: IEmployee) => row,
+					columns: [
+						{
+							id: "nome",
+							label: "Nome",
+							accessor: (row: IEmployee) => row.firstName,
+							sortFunction: options.sortable ? stringSorter : undefined,
+						},
+						{
+							id: "sobrenome",
+							label: "Sobrenome",
+							accessor: (row: IEmployee) => row.lastName,
+							sortFunction: options.sortable ? stringSorter : undefined,
+						},
+					],
+				},
+			] : [
+				{
+					id: "nome",
+					label: "Nome completo",
+					accessor: (row: IEmployee) => `${row.firstName} ${row.lastName}`,
+					sortFunction: options.sortable ? stringSorter : undefined,
+				},
+			]
+		),
 		{
 			id: "idade",
 			label: "Idade",
@@ -50,6 +94,35 @@ function generateColumnsWithFeatures(options: IPropsOptions): Array<IColumn<IEmp
 			sortFunction: options.sortable ? numberSorter : undefined,
 			renderCell: (n: number) => n.toLocaleString("pt-br", { style: "currency", currency: "BRL" }),
 		},
+		...(
+			options.nestedColumns ? [
+				{
+					id: "expenses",
+					label: "Gastos",
+					accessor: (row: IEmployee) => row.balanceDetails,
+					columns: [
+						{
+							id: "credit",
+							label: "Crédito",
+							accessor: (row: IEmployee["balanceDetails"]) => row.credit,
+							columns: generateBalanceColumns(options, "credit"),
+						},
+						{
+							id: "debit",
+							label: "Débito",
+							accessor: (row: IEmployee["balanceDetails"]) => row.debit,
+							columns: generateBalanceColumns(options, "debit"),
+						},
+						{
+							id: "cash",
+							label: "Dinheiro",
+							accessor: (row: IEmployee["balanceDetails"]) => row.cash,
+							columns: generateBalanceColumns(options, "cash"),
+						},
+					],
+				},
+			] : []
+		),
 	];
 }
 

@@ -1,11 +1,9 @@
-import { generatePropsWithFeatures } from "../data/props";
 import "jest";
-
-// import * as React from "react";
-import { testEnvironment } from "./assertions";
-import { testTableCoreFeaturesWithProps } from "./core.assertions";
-
 import "./setup";
+
+import { testEnvironment } from "./assertions";
+import { generatePropsWithFeatures } from "../data/props";
+import { testTableCoreFeaturesWithProps } from "./core.assertions";
 
 const emptyProps = generatePropsWithFeatures({ emptyData: true });
 const employeePropsWithId = generatePropsWithFeatures({});

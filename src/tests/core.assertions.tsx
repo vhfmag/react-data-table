@@ -1,3 +1,4 @@
+import { flattenColumns, getColumnsColSpan } from "../utils/helpers";
 import DataTableBody from "../components/body";
 import DataTableHeader from "../components/header";
 import "jest";
@@ -25,9 +26,12 @@ function tableShouldRenderCorrectTags<T extends object = object>(wrapper: ReactW
 		tableShouldHaveTHead(wrapper);
 		tableShouldRenderTableTag(wrapper);
 
+		const colCount = getColumnsColSpan(props.columns);
+		const colElementCount = flattenColumns(props.columns).length;
+
 		tableShouldHaveNRows(wrapper, props.data.length);
-		tableShouldHaveNColumns(wrapper, props.columns.length);
-		tableRowsShouldHaveNCells(wrapper, props.columns.length);
+		tableShouldHaveNColumns(wrapper, colElementCount);
+		tableRowsShouldHaveNCells(wrapper, colCount);
 	});
 }
 

@@ -1,3 +1,4 @@
+import { flattenColumns } from "../utils/helpers";
 import DataTableHeader, { DataTableHeaderCell, SortArrow } from "../components/header";
 import { Comparator } from "../utils/sorters";
 import DataTableRow from "../components/row";
@@ -33,9 +34,12 @@ export function testTableSortFeaturesWithProps<T extends object = object>(props:
 
 		let wrapper = mount(<DataTable {...props}/>);
 
+		const columns = flattenColumns(props.columns);
 		const unorderedData = wrapper.find(DataTableBody).find(DataTableRow).map((row) => row.props().datum);
-		const defaultSortedColumn = props.columns.find((col) => col.id === props.defaultSort);
+		const defaultSortedColumn = columns.find((col) => col.id === props.defaultSort);
 		const defaultSortedSorter = defaultSortedColumn && defaultSortedColumn.sortFunction;
+
+		const sortableColumns = columns.filter((col) => !!col.sortFunction);
 
 		if (props.defaultSort && defaultSortedColumn && defaultSortedSorter) {
 			it("given a valid default sort referencing a sortable column, rows should be sorted", function () {
@@ -47,9 +51,23 @@ export function testTableSortFeaturesWithProps<T extends object = object>(props:
 			});
 		}
 
-		describe("<SortArrow/> click behaviour", function() {
-			const sortableColumns = props.columns.filter((col) => col.sortFunction);
+		describe("every sortable column should have a <SortArrow/>", function() {
+			for (const column of sortableColumns) {
+				describe(`Column '${column.id}'`, function() {
+					const headerCellWrapper =
+						wrapper
+							.find(DataTableHeaderCell)
+							.filterWhere((headerCell) => headerCell.props().column.id === column.id)
+							.first();
 
+					if (!headerCellWrapper || !headerCellWrapper.exists()) throw new Error("Couldn't find an element for the given column");
+
+					expect(headerCellWrapper.find(SortArrow).exists()).to.be.true;
+				});
+			}
+		});
+
+		describe("<SortArrow/> click behaviour", function() {
 			for (const column of sortableColumns) {
 				describe(`Column '${column.id}'`, function() {
 
