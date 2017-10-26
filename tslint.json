@@ -179,6 +179,7 @@
         "chai-vague-errors": false,
         "no-non-null-assertion": false,
         "jsx-boolean-value": false,
-        "prefer-array-literal": false
+        "prefer-array-literal": false,
+        "no-single-line-block-comment": false
     }
 }
