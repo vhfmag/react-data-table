@@ -2,10 +2,10 @@ import { Comparator } from "./utils/sorters";
 import * as React from "react";
 import * as classnames from "classnames";
 
-import DataTableBody from "./body";
-import * as classes from "./classes";
-import DataTableHeader from "./header";
-import { tableClassName } from "./classes";
+import DataTableBody from "./components/body";
+import * as classes from "./utils/classes";
+import DataTableHeader from "./components/header";
+import { tableClassName } from "./utils/classes";
 
 import { decorate } from "core-decorators";
 
@@ -44,7 +44,7 @@ export interface IDataTableProps<RowData extends object>
 }
 
 export interface IDataTableState {
-	currentSortedColumn?: string;
+	currentlySortedColumn?: string;
 	isSortingDescendant: boolean;
 }
 
@@ -54,7 +54,7 @@ export default class DataTable<RowData extends object> extends React.Component<I
 
 		this.state = {
 			isSortingDescendant: false,
-			currentSortedColumn: this.props.defaultSort,
+			currentlySortedColumn: this.props.defaultSort,
 		};
 	}
 
@@ -69,10 +69,14 @@ export default class DataTable<RowData extends object> extends React.Component<I
 		}
 	}
 
+	private onChangeSorting = (currentlySortedColumn: string, isSortingDescendant: boolean): void => {
+		this.setState({ currentlySortedColumn, isSortingDescendant });
+	}
+
 	public render() {
 		const sortedData = this.getSortedData(
 			this.props.data,
-			this.props.columns.find((col) => col.id === this.state.currentSortedColumn),
+			this.props.columns.find((col) => col.id === this.state.currentlySortedColumn),
 			this.state.isSortingDescendant,
 		);
 
@@ -85,6 +89,10 @@ export default class DataTable<RowData extends object> extends React.Component<I
 					rowClassName={this.props.rowClassName}
 					headerCellClassName={this.props.headerCellClassName}
 					tableHeaderClassName={this.props.tableHeaderClassName}
+
+					onChangeSorting={this.onChangeSorting}
+					isSortingDescendant={this.state.isSortingDescendant}
+					currentlySortedColumn={this.state.currentlySortedColumn}
 				/>
 
 				<DataTableBody

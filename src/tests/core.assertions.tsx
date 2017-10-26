@@ -1,10 +1,10 @@
-import DataTableBody from "../body";
-import DataTableHeader from "../header";
+import DataTableBody from "../components/body";
+import DataTableHeader from "../components/header";
 import "jest";
 import "./setup.ts";
 import { expect } from "chai";
-import DataTableRow, { parseDatum } from "../row";
-import * as classes from "../classes";
+import DataTableRow, { parseDatum } from "../components/row";
+import * as classes from "../utils/classes";
 import { shouldntThrowWithProps } from "./assertions";
 
 import * as React from "react";

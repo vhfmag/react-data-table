@@ -1,9 +1,9 @@
-import { getColSpan } from "./utils";
+import { getColSpan } from "../utils/helpers";
 import * as React from "react";
 import * as classnames from "classnames";
 import DataTableRow, { DataTableRuleRow } from "./row";
-import { IDataTableProps } from "./";
-import { tableBodyClassName } from "./classes";
+import { IDataTableProps } from "..";
+import { tableBodyClassName } from "../utils/classes";
 import { ObjectOmit } from "typelevel-ts";
 import groupBy = require("lodash/groupBy");
 import { createSelector } from "reselect";

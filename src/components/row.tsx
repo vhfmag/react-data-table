@@ -1,6 +1,6 @@
-import { IColumn, IDataTableProps } from "./";
+import { IColumn, IDataTableProps } from "..";
 import * as React from "react";
-import * as classes from "./classes";
+import * as classes from "../utils/classes";
 import * as classnames from "classnames";
 
 export interface IDataTableRowProps

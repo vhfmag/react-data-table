@@ -1,6 +1,6 @@
 import { Comparator } from "../utils/sorters";
-import DataTableRow from "../row";
-import DataTableBody from "../body";
+import DataTableRow from "../components/row";
+import DataTableBody from "../components/body";
 import "jest";
 import "./setup.ts";
 import { shouldntThrowWithProps } from "./assertions";
