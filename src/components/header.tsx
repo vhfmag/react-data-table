@@ -9,6 +9,7 @@ import { headerCellClassName, rowClassName, tableHeaderClassName } from "../util
 import * as React from "react";
 import { IColumn, IDataTableProps } from "..";
 import * as classnames from "classnames";
+import { ObjectOmit } from "typelevel-ts";
 
 export interface IDataTableHeaderProps<RowData extends object>
 	extends Pick<IDataTableProps<RowData>, "columns" | "headerCellClassName" | "tableHeaderClassName" | "rowClassName"> {
@@ -90,8 +91,52 @@ export class DataTableHeaderCell<RowData extends object, CellData> extends React
 	}
 }
 
+interface IChildColumnChildren<T extends object> {
+	columns?: ReadonlyArray<IChildColumn<T>>;
+}
+
+interface ILeveledColumnChildren<T extends object> {
+	columns?: ReadonlyArray<ILeveledColumn<T>>;
+}
+
+interface IChildColumn<T extends object> extends ObjectOmit<IColumn<T>, "columns">, IChildColumnChildren<T> {
+	parent?: IChildColumn<T>;
+}
+
+interface ILeveledColumn<T extends object> extends ObjectOmit<IChildColumn<T>, "columns">, ILeveledColumnChildren<T> {
+	rowSpan: number;
+	parent?: ILeveledColumn<T>;
+}
+
 export default class DataTableHeader<RowData extends object = object> extends React.PureComponent<IDataTableHeaderProps<RowData>, {}> {
-	private static getColumnsOfLevel<T extends object>(cols: ReadonlyArray<IColumn<T>>, level: number): ReadonlyArray<IColumn<T>> {
+	private static linkColumnsToParent<T extends object>(cols: ReadonlyArray<IColumn<T>>, parent?: IChildColumn<T>): ReadonlyArray<IChildColumn<T>> {
+		return cols.map((col) => {
+			const newCol: IChildColumn<T> = { ...col, parent };
+			if (newCol.columns) {
+				newCol.columns = DataTableHeader.linkColumnsToParent(newCol.columns, newCol);
+			}
+
+			return newCol;
+		});
+	}
+
+	private static getLeveledColumns<T extends object>(cols: ReadonlyArray<IChildColumn<T>>, parent?: ILeveledColumn<T>): ReadonlyArray<ILeveledColumn<T>> {
+		const levelRowSpan = getColumnsMaxRowSpan(cols);
+
+		return cols.map<ILeveledColumn<T>>((col) => {
+			const newCol = {
+				...col,
+				parent,
+				rowSpan: levelRowSpan - (col.columns ? getColumnsMaxRowSpan(col.columns) : 0),
+			};
+
+			const columns: ReadonlyArray<ILeveledColumn<T>> | undefined = newCol.columns && DataTableHeader.getLeveledColumns(newCol.columns, parent);
+
+			return { ...newCol, columns };
+		});
+	}
+
+	private static getColumnsOfLevel<T extends object>(cols: ReadonlyArray<ILeveledColumn<T>>, level: number): ReadonlyArray<ILeveledColumn<T>> {
 		if (level === 0) {
 			return cols;
 		} else if (level > 0) {
@@ -105,8 +150,9 @@ export default class DataTableHeader<RowData extends object = object> extends Re
 
 	public render() {
 		const rowSpan = getColumnsMaxRowSpan(this.props.columns);
-		const levels = [...new Array(rowSpan)].map((_, i) => DataTableHeader.getColumnsOfLevel(this.props.columns, i));
-		const rowSpans = levels.map(getColumnsMaxRowSpan);
+		const parented = DataTableHeader.linkColumnsToParent(this.props.columns);
+		const leveled = DataTableHeader.getLeveledColumns(parented);
+		const levels = [...new Array(rowSpan)].map((_, i) => DataTableHeader.getColumnsOfLevel(leveled, i));
 
 		return (
 			<thead className={classnames(tableHeaderClassName, this.props.tableHeaderClassName)}>
@@ -124,7 +170,7 @@ export default class DataTableHeader<RowData extends object = object> extends Re
 										isCurrentlySorted={this.props.currentlySortedColumn === column.id}
 
 										colSpan={column.columns && getColumnsColSpan(column.columns)}
-										rowSpan={column.columns ? (rowSpans[level] - getColumnsMaxRowSpan(column.columns)) : rowSpans[level]}
+										rowSpan={column.rowSpan}
 									/>
 								))
 							}
