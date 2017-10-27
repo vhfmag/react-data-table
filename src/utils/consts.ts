@@ -1,1 +1,1 @@
-export const classNamePrefix = "--react-data-table--";
+export const classNamePrefix = "_--react-data-table--";

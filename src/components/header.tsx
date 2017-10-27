@@ -42,7 +42,7 @@ export class SortArrow extends React.PureComponent<ISortArrowProps> {
 
 	public render() {
 		return (
-			<div
+			<span
 				role="button"
 				onClick={this.onClick}
 				className={

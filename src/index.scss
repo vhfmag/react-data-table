@@ -1,7 +1,45 @@
 table {
     border-collapse: true;
 
-    &, tr, td, th {
+    &, &.table, tr, td, th {
         border: 1px solid black;
+    }
+}
+
+.sort-arrow {
+    font-size: .8em;
+    margin: .1em;
+
+    width: 1em;
+    height: .866em;
+    overflow: hidden;
+    color: rgba(0,0,0,.25);
+
+    display: inline-flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    &::after {
+        content: "";
+
+        border-left: .5em solid transparent;
+        border-right: .5em solid transparent;
+
+        border-top: .866em solid currentColor;
+        border-bottom: 0px solid currentColor;
+    }
+
+    &.sort-arrow--active {
+        color: rgba(0,0,0,.5);
+    }
+
+    // &.sort-arrow--ascendant {}
+
+    &.sort-arrow--descendant {
+        align-items: flex-end;
+        &::after {
+            border-top-width: 0px;
+            border-bottom-width: .866em;
+        }
     }
 }
