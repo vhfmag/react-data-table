@@ -197,20 +197,18 @@ function testIdAccessor<T extends object = object>(wrapper: ReactWrapper<IDataTa
 	});
 }
 
-export function testTableCoreFeaturesWithProps<T extends object = object>(props: IDataTableProps<T>, descriptor: string) {
-	describe(`with props for the given features: ${descriptor}`, function() {
-		shouldntThrowWithProps(props, DataTable);
-		const wrapper = mount(<DataTable {...props}/> );
+export function testTableCoreFeaturesWithProps<T extends object = object>(props: IDataTableProps<T>) {
+	shouldntThrowWithProps(props, DataTable);
+	const wrapper = mount(<DataTable {...props}/> );
 
-		tableShouldRenderCorrectTags(wrapper);
+	tableShouldRenderCorrectTags(wrapper);
 
-		testTableDefaultClasses(wrapper);
-		testTablePublicClassNames(wrapper, props, "props'");
+	testTableDefaultClasses(wrapper);
+	testTablePublicClassNames(wrapper, props, "props'");
 
-		testTableContentWithProps(wrapper);
-		testIdAccessor(wrapper);
+	testTableContentWithProps(wrapper);
+	testIdAccessor(wrapper);
 
-		testTableBody(wrapper);
-		testTableHeader(wrapper);
-	});
+	testTableBody(wrapper);
+	testTableHeader(wrapper);
 }

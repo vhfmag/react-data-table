@@ -149,3 +149,93 @@ export function generatePropsWithFeatures(options: IPropsOptions): IDataTablePro
 		...(options.categories ? categoryProps : {}),
 	};
 }
+
+export interface IDescriptedOptionProps {
+	description: string;
+	options: IPropsOptions;
+	props: IDataTableProps<IEmployee>;
+}
+
+interface IOptionsDescriptor extends IPropsOptions {
+	children?: IOptionsDescriptor[];
+}
+
+const partialOptions: IOptionsDescriptor[] = [
+	{
+		emptyData: true,
+	},
+	{
+		disableIdAccessor: true,
+	},
+	{
+		nestedColumns: true,
+	},
+	{
+		sortable: true,
+		children: [ { defaultSort: true } ],
+	},
+	{
+		categories: true,
+		children: [ { categoryLabel: true } ],
+	},
+];
+
+function describeOptions(options: IPropsOptions) {
+	const descriptions: string[] = [];
+
+	if (options.emptyData) {
+		descriptions.push("[empty state]");
+	}
+
+	if (options.categories) {
+		descriptions.push("[categories feature]");
+
+		if (options.categoryLabel) {
+			descriptions.push("[category label]");
+		}
+	}
+
+	if (options.sortable) {
+		descriptions.push("[sorting feature]");
+
+		if (options.defaultSort) {
+			descriptions.push("[default sort]");
+		}
+	}
+
+	if (options.disableIdAccessor) {
+		descriptions.push("[no id accessor]");
+	}
+
+	if (options.nestedColumns) {
+		descriptions.push("[nested columns]");
+	}
+
+	return descriptions && descriptions.join(", ") || "plain props";
+}
+
+function optionsToDescriptor(options: IPropsOptions): IDescriptedOptionProps {
+	return {
+		options,
+		description: describeOptions(options),
+		props: generatePropsWithFeatures(options),
+	};
+}
+
+function parseDescriptors(descriptors: IOptionsDescriptor[]): IPropsOptions[] {
+	if (descriptors.length === 0) {
+		return [{}];
+	} else {
+		const rootDescriptors = [...descriptors];
+		const { children, ...current } = rootDescriptors.splice(0, 1)[0];
+
+		const otherDescriptors = children ? [ ...rootDescriptors, ...children ] : rootDescriptors;
+
+		const otherOptions = parseDescriptors(otherDescriptors);
+
+		return [ ...otherOptions, ...otherOptions.map((options) => ({ ...options, ...current })) ];
+	}
+}
+
+const allDescriptors = parseDescriptors(partialOptions);
+export const allOptions = allDescriptors.map(optionsToDescriptor);

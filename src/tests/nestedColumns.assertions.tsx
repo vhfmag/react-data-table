@@ -62,20 +62,18 @@ function testColumnsForColSpan<T extends object = object>(cols: ReadonlyArray<IC
 	}
 }
 
-export function testTableNestedColumnsFeaturesWithProps<T extends object = object>(props: Readonly<IDataTableProps<T>>, descriptor: string) {
-	describe(`with props for the given features: ${descriptor}`, function() {
-		shouldntThrowWithProps(props, DataTable);
+export function testTableNestedColumnsFeaturesWithProps<T extends object = object>(props: Readonly<IDataTableProps<T>>) {
+	shouldntThrowWithProps(props, DataTable);
 
-		if (!props.columns.some((col) => !!col.columns)) throw new TypeError("Invalid props for nested columns test: no nested columns");
+	if (!props.columns.some((col) => !!col.columns)) throw new TypeError("Invalid props for nested columns test: no nested columns");
 
-		const wrapper = mount<IDataTableProps<T>>(<DataTable {...props}/>);
+	const wrapper = mount<IDataTableProps<T>>(<DataTable {...props}/>);
 
-		describe("every column should have the right row span", function() {
-			testColumnsForRowSpan(props.columns, wrapper);
-		});
+	describe("every column should have the right row span", function() {
+		testColumnsForRowSpan(props.columns, wrapper);
+	});
 
-		describe("every column should have the right col span", function() {
-			testColumnsForColSpan(props.columns, wrapper);
-		});
+	describe("every column should have the right col span", function() {
+		testColumnsForColSpan(props.columns, wrapper);
 	});
 }
