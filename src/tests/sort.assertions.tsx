@@ -34,7 +34,7 @@ export function testTableSortFeaturesWithProps<T extends object = object>(props:
 	let wrapper = mount(<DataTable {...props}/>);
 
 	const columns = flattenColumns(props.columns);
-		const unorderedData = wrapper.find(DataTableBody).find(DataTableRow).map((row) => row.props().datum);
+	const unorderedData = wrapper.find(DataTableBody).props().data;
 	const defaultSortedColumn = columns.find((col) => col.id === props.defaultSort);
 	const defaultSortedSorter = defaultSortedColumn && defaultSortedColumn.sortFunction;
 
