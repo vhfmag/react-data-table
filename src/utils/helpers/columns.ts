@@ -55,9 +55,13 @@ export function getColumnsMaxRowSpan<T extends object = object>(cols: ReadonlyAr
 	);
 }
 
-export function getColumnsByLevel<T extends object>(cols: ReadonlyArray<ILeveledColumn<T>>): { [index: number]: ReadonlyArray<ILeveledColumn<T>> | undefined } {
+export interface IColumnsByLevel<T extends object> {
+	[index: number]: ReadonlyArray<ILeveledColumn<T>>;
+}
+
+export function getColumnsByLevel<T extends object>(cols: ReadonlyArray<ILeveledColumn<T>>): IColumnsByLevel<T> {
 	const flatCols = flattenColumns(cols);
-	const ret: { [index: number]: Array<ILeveledColumn<T>> | undefined } = {};
+	const ret: IColumnsByLevel<T> = {};
 
 	for (const col of flatCols) {
 		let level: number = 0;
