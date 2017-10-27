@@ -17,7 +17,13 @@ module.exports = (baseConfig, env) => {
     test: /\.scss$/,
     use: [
         "style-loader",
-        "css-loader",
+        {
+          loader: "css-loader",
+          options: {
+            modules: true,
+            localIdentName: "--react-data-table--[local]"
+          },
+        },
         "sass-loader",
     ]
   });
