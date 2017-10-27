@@ -10,16 +10,15 @@ module.exports = (baseConfig, env) => {
         "babel-loader",
         {
             loader: "awesome-typescript-loader",
-            options: {
-                // configFileName: "./tsconfig.storybook.json"
-            }
         },
     ]
   });
   config.module.rules.push({
-    test: /\.jsx$/,
+    test: /\.scss$/,
     use: [
-        "babel-loader",
+        "style-loader",
+        "css-loader",
+        "sass-loader",
     ]
   });
   config.devtool = "eval-source-map";
