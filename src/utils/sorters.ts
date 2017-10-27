@@ -6,13 +6,13 @@ function isSome<T>(t: Maybe<T>): t is T {
 	return t !== undefined && t !== null;
 }
 
-function defaultNoneSorter<T>(t1: Maybe<T>, t2: Maybe<T>) {
+export function defaultNoneSorter<T>(t1: Maybe<T>, t2: Maybe<T>) {
 	if (!isSome(t1) && !isSome(t2)) {
 		return NaN;
-	} else if (isSome(t1)) {
-		return Infinity;
-	} else if (isSome(t2)) {
+	} else if (!isSome(t1)) {
 		return -Infinity;
+	} else if (!isSome(t2)) {
+		return Infinity;
 	} else {
 		throw new TypeError("Improper call to defaultNoneSorter: one of the operands should be null or undefined");
 	}
