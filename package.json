@@ -14,7 +14,6 @@
     "publish-storybook": "bash .scripts/publish_storybook.sh"
   },
   "devDependencies": {
-    "@kadira/storybook": "^2.35.3",
     "@storybook/addon-options": "^3.2.13",
     "@types/chai": "^4.0.4",
     "@types/classnames": "^2.2.3",
@@ -91,6 +90,7 @@
     "react": "^16"
   },
   "dependencies": {
+    "@storybook/react": "^3.2.13",
     "@types/react-lazyload": "^2.2.3"
   },
   "engines": {
