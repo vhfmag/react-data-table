@@ -41,10 +41,16 @@ export interface IDataTableSortProps {
 	defaultSort?: string;
 }
 
+export interface IDataTableSelectProps {
+	selected: string[];
+	selectable?: boolean;
+}
+
 export interface IDataTableProps<RowData extends object>
 	extends IDataTableCoreProps<RowData>,
 			Partial<IDataTableCategoryProps<RowData>>,
-			Partial<IDataTableSortProps> {
+			Partial<IDataTableSortProps>,
+			Partial<IDataTableSelectProps> {
 }
 
 export interface IDataTableState {
