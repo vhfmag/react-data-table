@@ -1,7 +1,7 @@
 import { IColumn, IDataTableProps } from "..";
 import * as React from "react";
 import * as classes from "../utils/publicClassNames";
-import * as classnames from "classnames";
+import classnames from "classnames";
 
 export interface IDataTableRowProps
 	<RowData extends object = object>

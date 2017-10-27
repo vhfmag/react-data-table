@@ -1,11 +1,11 @@
 import { getColumnsColSpan } from "../utils/helpers";
 import * as React from "react";
-import * as classnames from "classnames";
+import classnames from "classnames";
 import DataTableRow, { DataTableRuleRow } from "./row";
 import { IDataTableProps } from "..";
 import { tableBodyClassName } from "../utils/publicClassNames";
 import { ObjectOmit } from "typelevel-ts";
-import groupBy = require("lodash/groupBy");
+import groupBy from "lodash/groupBy";
 import { createSelector } from "reselect";
 
 export interface IDataTableBodyProps<RowData extends object>

@@ -8,7 +8,7 @@ import {
 import { headerCellClassName, rowClassName, tableHeaderClassName } from "../utils/publicClassNames";
 import * as React from "react";
 import { IColumn, IDataTableProps } from "..";
-import * as classnames from "classnames";
+import classnames from "classnames";
 import { ObjectOmit } from "typelevel-ts";
 
 export interface IDataTableHeaderProps<RowData extends object>

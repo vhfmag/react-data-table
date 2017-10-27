@@ -1,7 +1,7 @@
 import { flattenColumnsWithContent } from "./utils/helpers";
 import { Comparator } from "./utils/sorters";
 import * as React from "react";
-import * as classnames from "classnames";
+import classnames from "classnames";
 
 import DataTableBody from "./components/body";
 import * as classes from "./utils/publicClassNames";
@@ -11,7 +11,7 @@ import { tableClassName } from "./utils/publicClassNames";
 import { decorate } from "core-decorators";
 import { createSelector } from "reselect";
 
-const moize = require("moize");
+import moize from "moize";
 
 export interface IColumn<RowData, CellData = any> {
 	id: string;
