@@ -2,6 +2,7 @@ import * as React from "react";
 import DataTable from "../";
 import { allOptions } from "../data/props";
 import { storiesOf } from "@storybook/react";
+import "../loadStyle";
 
 const stories = storiesOf("DataTable", module);
 
