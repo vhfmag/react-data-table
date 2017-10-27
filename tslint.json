@@ -180,6 +180,8 @@
         "no-non-null-assertion": false,
         "jsx-boolean-value": false,
         "prefer-array-literal": false,
-        "no-single-line-block-comment": false
+        "no-single-line-block-comment": false,
+        "prefer-type-cast": false,
+        "no-for-in": false
     }
 }
