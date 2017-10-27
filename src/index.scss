@@ -36,10 +36,6 @@ table {
     // &.sort-arrow--ascendant {}
 
     &.sort-arrow--descendant {
-        align-items: flex-end;
-        &::after {
-            border-top-width: 0px;
-            border-bottom-width: .866em;
-        }
+        transform: rotate(180deg);
     }
 }
