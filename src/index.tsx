@@ -84,13 +84,13 @@ export default class DataTable<RowData extends object> extends React.Component<I
 	}
 
 	public render() {
+		const flattenedColumns = this.getFlattenedColumns(this.props);
+
 		const sortedData = this.getSortedData(
 			this.props.data,
-			this.props.columns.find((col) => col.id === this.state.currentlySortedColumn),
+			flattenedColumns.find((col) => col.id === this.state.currentlySortedColumn),
 			this.state.isSortingDescendant,
 		);
-
-		const flattenedColumns = this.getFlattenedColumns(this.props);
 
 		return (
 			<table
