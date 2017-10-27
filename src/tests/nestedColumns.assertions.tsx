@@ -1,5 +1,5 @@
 import { DataTableHeaderCell } from "../components/header";
-import { getColumnsColSpan, getColumnsMaxRowSpan } from "../utils/helpers";
+import { getColumnsColSpan, getColumnsMaxRowSpan } from "../utils/helpers/columns";
 import DataTable, { IColumn, IDataTableProps } from "../";
 import "jest";
 import "./setup";

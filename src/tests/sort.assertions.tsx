@@ -1,4 +1,4 @@
-import { flattenColumns } from "../utils/helpers";
+import { flattenColumns } from "../utils/helpers/columns";
 import DataTableHeader, { DataTableHeaderCell, SortArrow } from "../components/header";
 import { Comparator } from "../utils/sorters";
 import DataTableBody from "../components/body";

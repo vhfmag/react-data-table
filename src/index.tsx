@@ -1,4 +1,4 @@
-import { flattenColumnsWithContent } from "./utils/helpers";
+import { flattenColumnsWithContent } from "./utils/helpers/columns";
 import { Comparator } from "./utils/sorters";
 import * as React from "react";
 import classnames from "classnames";
@@ -50,6 +50,10 @@ export interface IDataTableProps<RowData extends object>
 export interface IDataTableState {
 	currentlySortedColumn?: string;
 	isSortingDescendant: boolean;
+}
+
+if (process.env.NODE_ENV !== "production") {
+	require("./index.scss");
 }
 
 export default class DataTable<RowData extends object> extends React.Component<IDataTableProps<RowData>, IDataTableState> {

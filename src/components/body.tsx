@@ -1,4 +1,4 @@
-import { getColumnsColSpan } from "../utils/helpers";
+import { getColumnsColSpan } from "../utils/helpers/columns";
 import * as React from "react";
 import classnames from "classnames";
 import DataTableRow, { DataTableRuleRow } from "./row";

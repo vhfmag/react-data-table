@@ -1,4 +1,4 @@
-import { flattenColumns, getColumnsColSpan } from "../utils/helpers";
+import { flattenColumns, getColumnsColSpan } from "../utils/helpers/columns";
 import DataTableBody from "../components/body";
 import DataTableHeader from "../components/header";
 import "jest";
