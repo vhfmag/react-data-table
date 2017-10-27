@@ -152,6 +152,7 @@ export function generatePropsWithFeatures(options: IPropsOptions): IDataTablePro
 
 export interface IDescriptedOptionProps {
 	description: string;
+	featureList: string[];
 	options: IPropsOptions;
 	props: IDataTableProps<IEmployee>;
 }
@@ -180,43 +181,50 @@ const partialOptions: IOptionsDescriptor[] = [
 	},
 ];
 
-function describeOptions(options: IPropsOptions) {
-	const descriptions: string[] = [];
+function getFeatureList(options: IPropsOptions) {
+	const featureList: string[] = [];
 
 	if (options.emptyData) {
-		descriptions.push("[empty state]");
+		featureList.push("empty state");
 	}
 
 	if (options.categories) {
-		descriptions.push("[categories feature]");
+		featureList.push("categories feature");
 
 		if (options.categoryLabel) {
-			descriptions.push("[category label]");
+			featureList.push("category label");
 		}
 	}
 
 	if (options.sortable) {
-		descriptions.push("[sorting feature]");
+		featureList.push("sorting feature");
 
 		if (options.defaultSort) {
-			descriptions.push("[default sort]");
+			featureList.push("default sort");
 		}
 	}
 
 	if (options.disableIdAccessor) {
-		descriptions.push("[no id accessor]");
+		featureList.push("no id accessor");
 	}
 
 	if (options.nestedColumns) {
-		descriptions.push("[nested columns]");
+		featureList.push("nested columns");
 	}
 
-	return descriptions && descriptions.join(", ") || "plain props";
+	return featureList;
+}
+
+function describeOptions(options: IPropsOptions) {
+	const featureList = getFeatureList(options);
+
+	return featureList && featureList.length ? featureList.map((feat) => `[${feat}]`).join(", ") : "plain props";
 }
 
 function optionsToDescriptor(options: IPropsOptions): IDescriptedOptionProps {
 	return {
 		options,
+		featureList: getFeatureList(options),
 		description: describeOptions(options),
 		props: generatePropsWithFeatures(options),
 	};
