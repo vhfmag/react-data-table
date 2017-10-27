@@ -110,7 +110,7 @@ export default class DataTableHeader<RowData extends object = object> extends Re
 			rows.push(
 				<tr key={level} className={classnames(rowClassName, this.props.rowClassName)}>
 					{
-						(rowColumns || []).map((column) => (
+						rowColumns.map((column) => (
 							<DataTableHeaderCell
 								key={column.id}
 								column={column}
