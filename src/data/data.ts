@@ -46,7 +46,9 @@ function fakeBalance(): IBalance {
 	};
 }
 
-export const employeeData: IEmployee[] = [...new Array(faker.random.number({ min: 1E2, max: 2E2 }))].map((_, i) => {
+faker.seed(0);
+
+export const employeeData: IEmployee[] = [...new Array(50)].map((_, i) => {
 	const age = faker.random.number({ min: 18, max: 100 });
 
 	return {
