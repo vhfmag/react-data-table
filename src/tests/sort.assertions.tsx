@@ -1,7 +1,6 @@
 import { flattenColumns } from "../utils/helpers";
 import DataTableHeader, { DataTableHeaderCell, SortArrow } from "../components/header";
 import { Comparator } from "../utils/sorters";
-import DataTableRow from "../components/row";
 import DataTableBody from "../components/body";
 import "jest";
 import "./setup.ts";
@@ -70,7 +69,7 @@ export function testTableSortFeaturesWithProps<T extends object = object>(props:
 		for (const column of sortableColumns) {
 			describe(`Column '${column.id}'`, function() {
 
-				for (let i = 1; i < 5; i++) {
+				for (let i = 1; i < 4; i++) {
 					it(`should have right behaviour for click #${i}`, function() {
 						const columnWrapper = getColumnWrapperById(wrapper, column.id);
 						if (!columnWrapper) throw new Error("Column wrapper couldn't be found in tree");
