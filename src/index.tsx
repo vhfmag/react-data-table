@@ -20,7 +20,7 @@ export interface IColumn<RowData, CellData = any> {
 	renderCell?(v: CellData): React.ReactNode;
 	sortFunction?: Comparator<CellData>;
 
-	columns?: ReadonlyArray<IColumn<CellData, any>>;
+	columns?: ReadonlyArray<IColumn<CellData>>;
 }
 
 export interface IDataTableCoreProps<RowData extends object> extends Partial<typeof classes> {
@@ -50,10 +50,6 @@ export interface IDataTableProps<RowData extends object>
 export interface IDataTableState {
 	currentlySortedColumn?: string;
 	isSortingDescendant: boolean;
-}
-
-if (process.env.NODE_ENV !== "production") {
-	require("./index.scss");
 }
 
 export default class DataTable<RowData extends object> extends React.Component<IDataTableProps<RowData>, IDataTableState> {

@@ -37,9 +37,9 @@ export function getLeveledColumns<T extends object>(cols: ReadonlyArray<IChildCo
 			...col,
 			parent,
 			rowSpan: levelRowSpan - (col.columns ? getColumnsMaxRowSpan(col.columns) : 0),
-		};
+		} as ILeveledColumn<T>;
 
-		const columns: ReadonlyArray<ILeveledColumn<T>> | undefined = newCol.columns && getLeveledColumns(newCol.columns, parent);
+		const columns: ReadonlyArray<ILeveledColumn<T>> | undefined = newCol.columns && getLeveledColumns(newCol.columns, newCol);
 
 		return { ...newCol, columns };
 	});
@@ -55,30 +55,44 @@ export function getColumnsMaxRowSpan<T extends object = object>(cols: ReadonlyAr
 	);
 }
 
-export function getColumnsOfLevel<T extends object>(cols: ReadonlyArray<ILeveledColumn<T>>, level: number): ReadonlyArray<ILeveledColumn<T>> {
-	if (level === 0) {
-		return cols;
-	} else if (level > 0) {
-		const nextLevel = cols.map((col) => col.columns || []).reduce((acc, arr) => [...acc, ...arr]);
+export function getColumnsByLevel<T extends object>(cols: ReadonlyArray<ILeveledColumn<T>>): { [index: number]: ReadonlyArray<ILeveledColumn<T>> | undefined } {
+	const flatCols = flattenColumns(cols);
+	const ret: { [index: number]: Array<ILeveledColumn<T>> | undefined } = {};
 
-		return getColumnsOfLevel(nextLevel, level - 1);
-	} else {
-		throw new TypeError(`Invalid call to getColumnsLevel - level is negative: ${level}`);
+	for (const col of flatCols) {
+		let level: number = 0;
+		if (col.parent) {
+			let parent: typeof col.parent | undefined = col.parent;
+
+			while (parent) {
+				level += parent.rowSpan;
+				parent = parent.parent;
+			}
+		}
+
+		ret[level] = [...(ret[level] || []), col];
 	}
+
+	return ret;
 }
 
-export function flattenColumns<T extends object = object>(cols: ReadonlyArray<IColumn<T>>, parentColumn?: IColumn<T>): ReadonlyArray<IColumn<T>> {
+export interface IGenericColumn<RowData, CellData = any> {
+	accessor(v: RowData): CellData;
+	columns?: ReadonlyArray<IGenericColumn<CellData, any>>;
+}
+
+export function flattenColumns<T extends object, Col extends IGenericColumn<T>>(cols: ReadonlyArray<Col>, parentColumn?: Col): ReadonlyArray<Col> {
 	return cols.map((col) => {
-		const parentAccessor: IColumn<T>["accessor"] = parentColumn ? parentColumn.accessor : (v) => v;
-		const newCol: typeof col = {...col, accessor: (v) => col.accessor(parentAccessor(v))};
+		const parentAccessor: Col["accessor"] = parentColumn ? parentColumn.accessor : (v) => v;
+		const newCol: typeof col = {...(col as any), accessor: (v) => col.accessor(parentAccessor(v))};
 		if (col.columns) {
-			return [newCol, ...flattenColumns(col.columns, newCol)];
+			return [newCol, ...flattenColumns<T, Col>(col.columns as Col[], newCol)];
 		} else {
 			return [newCol];
 		}
 	}).reduce((acc, arr) => [...acc, ...arr]);
 }
 
-export function flattenColumnsWithContent<T extends object = object>(cols: ReadonlyArray<IColumn<T>>): ReadonlyArray<IColumn<T>> {
-	return flattenColumns(cols).filter((col) => !col.columns);
+export function flattenColumnsWithContent<T extends object, Col extends IGenericColumn<T>>(cols: ReadonlyArray<Col>): ReadonlyArray<Col> {
+	return flattenColumns<T, Col>(cols).filter((col) => !col.columns);
 }

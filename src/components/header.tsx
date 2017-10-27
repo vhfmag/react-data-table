@@ -1,9 +1,8 @@
 import {
 	getColumnsColSpan,
-	getColumnsMaxRowSpan,
 	linkColumnsToParent,
 	getLeveledColumns,
-	getColumnsOfLevel,
+	getColumnsByLevel,
 } from "../utils/helpers/columns";
 
 import {
@@ -99,34 +98,39 @@ export class DataTableHeaderCell<RowData extends object, CellData> extends React
 
 export default class DataTableHeader<RowData extends object = object> extends React.PureComponent<IDataTableHeaderProps<RowData>, {}> {
 	public render() {
-		const rowSpan = getColumnsMaxRowSpan(this.props.columns);
+		// const rowSpan = getColumnsMaxRowSpan(this.props.columns);
 		const parented = linkColumnsToParent(this.props.columns);
 		const leveled = getLeveledColumns(parented);
-		const levels = [...new Array(rowSpan)].map((_, i) => getColumnsOfLevel(leveled, i));
+		const colsByLevel = getColumnsByLevel(leveled);
+
+		const rows: Array<React.ReactElement<any>> = [];
+		for (const level in colsByLevel) {
+			const rowColumns = colsByLevel[level];
+
+			rows.push(
+				<tr key={level} className={classnames(rowClassName, this.props.rowClassName)}>
+					{
+						(rowColumns || []).map((column) => (
+							<DataTableHeaderCell
+								key={column.id}
+								column={column}
+								onChangeSorting={this.props.onChangeSorting}
+								isSortingDescendant={this.props.isSortingDescendant}
+								headerCellClassName={this.props.headerCellClassName}
+								isCurrentlySorted={this.props.currentlySortedColumn === column.id}
+
+								colSpan={column.columns && getColumnsColSpan(column.columns)}
+								rowSpan={column.rowSpan}
+							/>
+						))
+					}
+				</tr>,
+			);
+		}
 
 		return (
 			<thead className={classnames(tableHeaderClassName, this.props.tableHeaderClassName)}>
-				{
-					levels.map((rowColumns, level) => (
-						<tr key={level} className={classnames(rowClassName, this.props.rowClassName)}>
-							{
-								rowColumns.map((column) => (
-									<DataTableHeaderCell
-										key={column.id}
-										column={column}
-										onChangeSorting={this.props.onChangeSorting}
-										isSortingDescendant={this.props.isSortingDescendant}
-										headerCellClassName={this.props.headerCellClassName}
-										isCurrentlySorted={this.props.currentlySortedColumn === column.id}
-
-										colSpan={column.columns && getColumnsColSpan(column.columns)}
-										rowSpan={column.rowSpan}
-									/>
-								))
-							}
-						</tr>
-					))
-				}
+				{rows}
 			</thead>
 		);
 	}
