@@ -1,5 +1,12 @@
 import { dateSorter, numberSorter, stringSorter } from "../utils/sorters";
-import { IColumn, IDataTableCategoryProps, IDataTableCoreProps, IDataTableProps, IDataTableSortProps } from "..";
+import {
+	IColumn,
+	IDataTableCategoryProps,
+	IDataTableCoreProps,
+	IDataTableProps,
+	IDataTableSelectProps,
+	IDataTableSortProps,
+} from "..";
 import { employeeData, IBalance, IEmployee, testClasses } from "./data";
 
 export interface IPropsOptions {
@@ -17,6 +24,9 @@ export interface IPropsOptions {
 
 	// nested columns
 	nestedColumns?: boolean;
+
+	// row selection
+	selectable?: boolean;
 }
 
 function generateBalanceColumns(options: IPropsOptions, idPrefix: string): ReadonlyArray<IColumn<IBalance>> {
@@ -143,10 +153,17 @@ export function generatePropsWithFeatures(options: IPropsOptions): IDataTablePro
 		defaultSort: options.defaultSort ? "nome" : undefined,
 	};
 
+	const selectionProps: IDataTableSelectProps = {
+		selectable: options.selectable,
+		onSelect: () => { return; },
+		selectedRowsIds: [],
+	};
+
 	return {
 		...coreProps,
 		...(options.sortable ? sortProps : {}),
 		...(options.categories ? categoryProps : {}),
+		...(options.selectable ? selectionProps : {}),
 	};
 }
 
@@ -162,57 +179,30 @@ interface IOptionsDescriptor extends IPropsOptions {
 }
 
 const partialOptions: IOptionsDescriptor[] = [
-	{
-		emptyData: true,
-	},
-	{
-		disableIdAccessor: true,
-	},
-	{
-		nestedColumns: true,
-	},
-	{
-		sortable: true,
-		children: [ { defaultSort: true } ],
-	},
-	{
-		categories: true,
-		children: [ { categoryLabel: true } ],
-	},
+	{ emptyData: true },
+	{ disableIdAccessor: true },
+	{ nestedColumns: true },
+	{ sortable: true },
+	{ defaultSort: true },
+	{ categories: true },
+	{ categoryLabel: true },
+	{ selectable: true },
 ];
 
+const optionsDescriptions: { [key in keyof IPropsOptions] } = {
+	emptyData: "empty state",
+	categories: "categories features",
+	categoryLabel: "category label",
+	sortable: "sorting feature",
+	defaultSort: "default sort",
+	disableIdAccessor: "no id accessor",
+	nestedColumns: "nested columns",
+};
+
 function getFeatureList(options: IPropsOptions) {
-	const featureList: string[] = [];
+	const enabledOptions = (Object.keys(options) as Array<keyof IPropsOptions>).filter((key) => options[key]);
 
-	if (options.emptyData) {
-		featureList.push("empty state");
-	}
-
-	if (options.categories) {
-		featureList.push("categories feature");
-
-		if (options.categoryLabel) {
-			featureList.push("category label");
-		}
-	}
-
-	if (options.sortable) {
-		featureList.push("sorting feature");
-
-		if (options.defaultSort) {
-			featureList.push("default sort");
-		}
-	}
-
-	if (options.disableIdAccessor) {
-		featureList.push("no id accessor");
-	}
-
-	if (options.nestedColumns) {
-		featureList.push("nested columns");
-	}
-
-	return featureList;
+	return enabledOptions.map((key) => optionsDescriptions[key]);
 }
 
 function describeOptions(options: IPropsOptions) {

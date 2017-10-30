@@ -42,8 +42,9 @@ export interface IDataTableSortProps {
 }
 
 export interface IDataTableSelectProps {
-	selected: string[];
 	selectable?: boolean;
+	selectedRowsIds: string[];
+	onSelect(selectedRowsIds: string[]): void;
 }
 
 export interface IDataTableProps<RowData extends object>
