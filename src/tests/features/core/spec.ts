@@ -1,9 +1,9 @@
 import "jest";
-import "./setup";
+import "../../setup";
 
-import { testEnvironment } from "./assertions";
-import { allOptions } from "../data/props";
-import { testTableCoreFeaturesWithProps } from "./core.assertions";
+import { testEnvironment } from "../../assertions";
+import { allOptions } from "../../../data/props";
+import { testTableCoreFeaturesWithProps } from "./assertions";
 
 testEnvironment();
 

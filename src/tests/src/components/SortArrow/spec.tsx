@@ -1,10 +1,10 @@
 import "jest";
-import "../../setup";
+import "../../../setup";
 import { expect } from "chai";
 import { mount } from "enzyme";
-import { SortArrow } from "../../../components/header";
+import { SortArrow } from "../../../../components/header";
 import * as React from "react";
-import * as privateClasses from "../../../utils/privateClassNames";
+import * as privateClasses from "../../../../utils/privateClassNames";
 import { spy } from "sinon";
 
 const noop = () => { return; };

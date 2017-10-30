@@ -1,8 +1,8 @@
-import { testTableSortFeaturesWithProps } from "./sort.assertions";
-import { allOptions } from "../data/props";
+import { testTableSortFeaturesWithProps } from "./assertions";
+import { allOptions } from "../../../data/props";
 import "jest";
-import "./setup.ts";
-import { testEnvironment } from "./assertions";
+import "../../setup";
+import { testEnvironment } from "../../assertions";
 
 testEnvironment();
 

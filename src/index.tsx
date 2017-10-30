@@ -27,7 +27,7 @@ export interface IDataTableCoreProps<RowData extends object> extends Partial<typ
 	data: ReadonlyArray<RowData>;
 	columns: ReadonlyArray<IColumn<RowData>>;
 
-	idAccessor?(datum: RowData): string | number;
+	idAccessor?(datum: RowData): string;
 
 	children?: never;
 }

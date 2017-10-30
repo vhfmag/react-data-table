@@ -1,10 +1,10 @@
-import { flattenColumns } from "../utils/helpers/columns";
-import DataTableHeader, { DataTableHeaderCell, SortArrow } from "../components/header";
-import { Comparator } from "../utils/sorters";
-import DataTableBody from "../components/body";
+import { flattenColumns } from "../../../utils/helpers/columns";
+import DataTableHeader, { DataTableHeaderCell, SortArrow } from "../../../components/header";
+import { Comparator } from "../../../utils/sorters";
+import DataTableBody from "../../../components/body";
 import "jest";
-import "./setup.ts";
-import { shouldntThrowWithProps } from "./assertions";
+import "../../setup";
+import { shouldntThrowWithProps } from "../../assertions";
 import * as React from "react";
 import { mount, ReactWrapper } from "enzyme";
 import { expect } from "chai";
@@ -17,7 +17,7 @@ function isSorted<T>(arr: ReadonlyArray<T>, sorter: Comparator<T>, descendant?: 
 	return true;
 }
 
-import DataTable, { IDataTableProps } from "../";
+import DataTable, { IDataTableProps } from "../../../";
 
 function getColumnWrapperById<T extends object>(wrapper: ReactWrapper<IDataTableProps<T>>, columnId: string) {
 	return wrapper

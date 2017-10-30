@@ -121,6 +121,6 @@
     "setupFiles": [
       "raf/polyfill"
     ],
-    "testRegex": "/src/tests/.*\\.spec\\.(ts|tsx|js|jsx)$"
+    "testRegex": "/src/tests/.*spec\\.(ts|tsx|js|jsx)$"
   }
 }

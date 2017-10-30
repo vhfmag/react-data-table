@@ -1,8 +1,8 @@
-import { testTableNestedColumnsFeaturesWithProps } from "./nestedColumns.assertions";
-import { allOptions } from "../data/props";
+import { testTableNestedColumnsFeaturesWithProps } from "./assertions";
+import { allOptions } from "../../../data/props";
 import "jest";
-import "./setup";
-import { testEnvironment } from "./assertions";
+import "../../setup";
+import { testEnvironment } from "../../assertions";
 
 testEnvironment();
 

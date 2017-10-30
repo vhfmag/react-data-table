@@ -1,9 +1,9 @@
-import { testTableCategoryFeaturesWithProps } from "./category.assertions";
-import { allOptions } from "../data/props";
+import { testTableCategoryFeaturesWithProps } from "./assertions";
+import { allOptions } from "../../../data/props";
 import "jest";
-import "./setup";
+import "../../setup";
 
-import { testEnvironment } from "./assertions";
+import { testEnvironment } from "../../assertions";
 
 testEnvironment();
 

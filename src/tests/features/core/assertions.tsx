@@ -1,16 +1,16 @@
-import { flattenColumns, getColumnsColSpan } from "../utils/helpers/columns";
-import DataTableBody from "../components/body";
-import DataTableHeader from "../components/header";
+import { flattenColumns, getColumnsColSpan } from "../../../utils/helpers/columns";
+import DataTableBody from "../../../components/body";
+import DataTableHeader from "../../../components/header";
 import "jest";
-import "./setup.ts";
+import "../../setup";
 import { expect } from "chai";
-import DataTableRow, { parseDatum } from "../components/row";
-import * as publicClasses from "../utils/publicClassNames";
-import { shouldntThrowWithProps } from "./assertions";
+import DataTableRow, { parseDatum } from "../../../components/row";
+import * as publicClasses from "../../../utils/publicClassNames";
+import { shouldntThrowWithProps } from "../../assertions";
 
 import * as React from "react";
 import { mount, ReactWrapper } from "enzyme";
-import DataTable, { IDataTableProps } from "../";
+import DataTable, { IDataTableProps } from "../../../";
 
 function tableShouldRenderTableTag<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
 	it("should have a single <table> tag", function() {

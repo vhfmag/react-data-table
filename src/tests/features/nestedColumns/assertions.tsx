@@ -1,14 +1,14 @@
-import { DataTableHeaderCell } from "../components/header";
-import { getColumnsColSpan, getColumnsMaxRowSpan } from "../utils/helpers/columns";
-import DataTable, { IColumn, IDataTableProps } from "../";
+import { DataTableHeaderCell } from "../../../components/header";
+import { getColumnsColSpan, getColumnsMaxRowSpan } from "../../../utils/helpers/columns";
+import DataTable, { IColumn, IDataTableProps } from "../../../";
 import "jest";
-import "./setup";
+import "../../setup";
 import { expect } from "chai";
 import { mount, ReactWrapper } from "enzyme";
 
 import * as React from "react";
 
-import { shouldntThrowWithProps } from "./assertions";
+import { shouldntThrowWithProps } from "../../assertions";
 
 function testColumnsForRowSpan<T extends object = object>(cols: ReadonlyArray<IColumn<T>>, wrapper: ReactWrapper, level: number = 0) {
 	const maxRowSpan = getColumnsMaxRowSpan(cols);
