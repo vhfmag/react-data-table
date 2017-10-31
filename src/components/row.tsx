@@ -74,7 +74,7 @@ export class DataTableCell<RowData extends object> extends React.PureComponent<I
 	}
 }
 
-export interface IDataTableRuleRowProps extends Partial<Pick<typeof classes, "ruleRowClassName" | "cellClassName">> {
+export interface IDataTableCategoryRowProps extends Partial<Pick<typeof classes, "ruleRowClassName" | "cellClassName">> {
 	colSpan: number;
 	category: string;
 	children?: never;
@@ -84,7 +84,7 @@ export interface IDataTableRuleRowProps extends Partial<Pick<typeof classes, "ru
 	selectable?: boolean;
 }
 
-export class DataTableRuleRow extends React.PureComponent<IDataTableRuleRowProps, {}> {
+export class DataTableCategoryRow extends React.PureComponent<IDataTableCategoryRowProps, {}> {
 	public render() {
 		return (
 			<tr

@@ -1,7 +1,7 @@
 import { getColumnsColSpan } from "../utils/helpers/columns";
 import * as React from "react";
 import classnames from "classnames";
-import DataTableRow, { DataTableRuleRow, IDataTableRowProps } from "./row";
+import DataTableRow, { DataTableCategoryRow, IDataTableRowProps } from "./row";
 import { IDataTableProps } from "..";
 import { tableBodyClassName } from "../utils/publicClassNames";
 import { ObjectOmit } from "typelevel-ts";
@@ -58,7 +58,7 @@ export class DataTableCategorySection<RowData extends object> extends React.Pure
 	public render() {
 		return [
 			(
-				<DataTableRuleRow
+				<DataTableCategoryRow
 					key="rule"
 					category={this.props.category}
 					colSpan={getColumnsColSpan(this.props.columns) + (this.props.selectable ? 1 : 0)}

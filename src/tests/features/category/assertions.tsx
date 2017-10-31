@@ -8,7 +8,7 @@ import { mount } from "enzyme";
 import DataTable, { IDataTableProps } from "../../../";
 import DataTableBody, { DataTableCategorySection } from "../../../components/body";
 import DataTableHeader from "../../../components/header";
-import DataTableRow, { DataTableRuleRow } from "../../../components/row";
+import DataTableRow, { DataTableCategoryRow } from "../../../components/row";
 
 export function testTableCategoryFeaturesWithProps<T extends object = object>(props: Readonly<IDataTableProps<T>>) {
 	shouldntThrowWithProps(props, DataTable);
@@ -45,13 +45,13 @@ export function testTableCategoryFeaturesWithProps<T extends object = object>(pr
 
 	it("every category section should start with a rule row", () => {
 		expect(wrapper.find(DataTableBody).find(DataTableCategorySection).everyWhere(
-			(section) => section.childAt(0).is(DataTableRuleRow),
+			(section) => section.childAt(0).is(DataTableCategoryRow),
 		)).to.be.true;
 	});
 
 	it("every category section should have only one rule row", () => {
 		expect(wrapper.find(DataTableBody).find(DataTableCategorySection).everyWhere(
-			(section) => section.find(DataTableRuleRow).length === 1,
+			(section) => section.find(DataTableCategoryRow).length === 1,
 		)).to.be.true;
 	});
 
@@ -62,7 +62,7 @@ export function testTableCategoryFeaturesWithProps<T extends object = object>(pr
 	it("should repass right category to each rule row", () => {
 		expect(
 			wrapper.find(DataTableCategorySection).everyWhere((section) => {
-				return section.find(DataTableRuleRow).props().category === section.props().category;
+				return section.find(DataTableCategoryRow).props().category === section.props().category;
 			}),
 		).to.be.true;
 	});

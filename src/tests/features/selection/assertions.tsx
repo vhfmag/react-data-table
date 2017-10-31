@@ -130,7 +130,7 @@ export function testTableRowSelectionWithProps<T extends object = object>(props:
 				}
 			});
 
-			// TODO: check if every DataTableRuleRow has a selection cell and check if category's rows are toggled
+			// TODO: check if every DataTableCategoryRow has a selection cell and check if category's rows are toggled
 		});
 	} else {
 		describe("since is not selectable", () => {
