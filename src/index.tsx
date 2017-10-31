@@ -40,6 +40,12 @@ export interface IDataTableSortProps {
 	defaultSort?: string;
 }
 
+export interface IDataTableTotalProps<RowData extends object> {
+	totalAccessor(data: ReadonlyArray<RowData>): RowData;
+	hideBodyTotal?: boolean;
+	hideCategoryTotal?: boolean;
+}
+
 export interface IDataTableSelectProps {
 	selectable?: boolean;
 	selectedRowsIds?: string[];
@@ -49,6 +55,7 @@ export interface IDataTableSelectProps {
 export interface IDataTableProps<RowData extends object>
 	extends IDataTableCoreProps<RowData>,
 			Partial<IDataTableCategoryProps<RowData>>,
+			Partial<IDataTableTotalProps<RowData>>,
 			Partial<IDataTableSortProps>,
 			Partial<IDataTableSelectProps> {
 }
