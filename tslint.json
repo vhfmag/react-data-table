@@ -182,6 +182,7 @@
         "prefer-array-literal": false,
         "no-single-line-block-comment": false,
         "prefer-type-cast": false,
-        "no-for-in": false
+        "no-for-in": false,
+        "max-func-body-length": false
     }
 }
