@@ -77,25 +77,33 @@ export function testTableRowSelectionWithProps<T extends object = object>(props:
 			});
 
 			describe("the DataTableHeaderSelectionCell", () => {
-				it("onSelect should be called on change", () => {
-					const selectionCell = wrapper.find(DataTableHeader).find(DataTableHeaderSelectionCell);
-					const { selected } = selectionCell.props();
+				if (wrapper.props().data.length > 0) {
+					describe("given there are more than zero rows", () => {
+						it("onSelect should be called on change", () => {
+							const selectionCell = wrapper.find(DataTableHeader).find(DataTableHeaderSelectionCell);
+							const { selected } = selectionCell.props();
 
-					parent.onSelect.reset();
-					selectionCell.find(SelectionCell).find("input").simulate("change", { target: { checked: !selected } });
-					expect(parent.onSelect.called).to.be.true;
+							parent.onSelect.reset();
+							selectionCell.find(SelectionCell).find("input").simulate("change", { target: { checked: !selected } });
+							expect(parent.onSelect.called).to.be.true;
 
-					updateWrappers();
-					const { selected: newSelected } = wrapper.find(DataTableHeader).find(DataTableHeaderSelectionCell).props();
-					expect(newSelected, "selected props should have changed after react update").not.to.be.equal(selected);
+							updateWrappers();
+							const { selected: newSelected } = wrapper.find(DataTableHeader).find(DataTableHeaderSelectionCell).props();
+							expect(newSelected, "selected props should have changed after react update").not.to.be.equal(selected);
 
-					selectionCell.find(SelectionCell).find("input").simulate("change", { target: { checked: !newSelected } });
-					updateWrappers();
+							selectionCell.find(SelectionCell).find("input").simulate("change", { target: { checked: !newSelected } });
+							updateWrappers();
 
-					const { selected: renewSelected } = wrapper.find(DataTableHeader).find(DataTableHeaderSelectionCell).props();
-					expect(renewSelected, "selected props should change again after second click").to.be.equal(selected);
-				});
+							const { selected: renewSelected } = wrapper.find(DataTableHeader).find(DataTableHeaderSelectionCell).props();
+							expect(renewSelected, "selected props should change again after second click").to.be.equal(selected);
+						});
+					});
+				} else {
+					// TODO: check if the input is disabled
+				}
 			});
+
+			// TODO: check if every DataTableRuleRow has a selection cell and check if category's rows are toggled
 		});
 	} else {
 		describe("since is not selectable", () => {
