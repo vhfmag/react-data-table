@@ -7,3 +7,5 @@ export const ruleRowClassName = classNamePrefix + "ruleRow";
 export const tableBodyClassName = classNamePrefix + "tableBody";
 export const headerCellClassName = classNamePrefix + "headerCell";
 export const tableHeaderClassName = classNamePrefix + "tableHeader";
+
+export const selectedRowClassName = classNamePrefix + "selected-row";

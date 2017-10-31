@@ -1,5 +1,5 @@
 import * as React from "react";
-import DataTable from "../";
+import { StatefulSelectedWrapper } from "../helpers/tableWrapper";
 import { allOptions } from "../data/props";
 import { storiesOf } from "@storybook/react";
 import "../loadStyle";
@@ -13,7 +13,7 @@ for (const descriptor of allOptions) {
 
     if (!featuresSet.has(features)) {
         stories.add(features, () => (
-            <DataTable {...descriptor.props}/>
+            <StatefulSelectedWrapper {...descriptor.props}/>
         ));
 
         featuresSet.add(features);

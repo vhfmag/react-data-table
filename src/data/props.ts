@@ -12,7 +12,6 @@ import { employeeData, IBalance, IEmployee, testClasses } from "./data";
 export interface IPropsOptions {
 	// core features
 	emptyData?: boolean;
-	disableIdAccessor?: boolean;
 
 	// category features
 	categories?: boolean;
@@ -27,7 +26,30 @@ export interface IPropsOptions {
 
 	// row selection
 	selectable?: boolean;
+	undefinedSelected?: boolean;
 }
+
+const partialOptions: IPropsOptions[] = [
+	{ emptyData: true },
+	{ nestedColumns: true },
+	{ sortable: true },
+	{ defaultSort: true },
+	{ categories: true },
+	{ categoryLabel: true },
+	{ selectable: true },
+	{ undefinedSelected: true },
+];
+
+const optionsDescriptions: { [key in keyof IPropsOptions]: string } = {
+	emptyData: "empty state",
+	categories: "categories features",
+	categoryLabel: "category label",
+	sortable: "sorting feature",
+	defaultSort: "default sort",
+	nestedColumns: "nested columns",
+	selectable: "selectable",
+	undefinedSelected: "undefined selectedRowsIds prop",
+};
 
 function generateBalanceColumns(options: IPropsOptions, idPrefix: string): ReadonlyArray<IColumn<IBalance>> {
 	return [
@@ -140,7 +162,7 @@ export function generatePropsWithFeatures(options: IPropsOptions): IDataTablePro
 	const coreProps: IDataTableCoreProps<IEmployee> = {
 		data: options.emptyData ? [] : employeeData,
 		columns: generateColumnsWithFeatures(options),
-		idAccessor: options.disableIdAccessor ? undefined : (emp) => emp.id,
+		idAccessor: (emp) => emp.id,
 		...testClasses,
 	};
 
@@ -156,7 +178,7 @@ export function generatePropsWithFeatures(options: IPropsOptions): IDataTablePro
 	const selectionProps: IDataTableSelectProps = {
 		selectable: options.selectable,
 		onSelect: () => { return; },
-		selectedRowsIds: [],
+		selectedRowsIds: options.undefinedSelected ? undefined : [],
 	};
 
 	return {
@@ -174,35 +196,10 @@ export interface IDescriptedOptionProps {
 	props: IDataTableProps<IEmployee>;
 }
 
-interface IOptionsDescriptor extends IPropsOptions {
-	children?: IOptionsDescriptor[];
-}
-
-const partialOptions: IOptionsDescriptor[] = [
-	{ emptyData: true },
-	{ disableIdAccessor: true },
-	{ nestedColumns: true },
-	{ sortable: true },
-	{ defaultSort: true },
-	{ categories: true },
-	{ categoryLabel: true },
-	{ selectable: true },
-];
-
-const optionsDescriptions: { [key in keyof IPropsOptions] } = {
-	emptyData: "empty state",
-	categories: "categories features",
-	categoryLabel: "category label",
-	sortable: "sorting feature",
-	defaultSort: "default sort",
-	disableIdAccessor: "no id accessor",
-	nestedColumns: "nested columns",
-};
-
 function getFeatureList(options: IPropsOptions) {
 	const enabledOptions = (Object.keys(options) as Array<keyof IPropsOptions>).filter((key) => options[key]);
 
-	return enabledOptions.map((key) => optionsDescriptions[key]);
+	return enabledOptions.map((key) => optionsDescriptions[key]).sort();
 }
 
 function describeOptions(options: IPropsOptions) {
@@ -220,16 +217,14 @@ function optionsToDescriptor(options: IPropsOptions): IDescriptedOptionProps {
 	};
 }
 
-function parseDescriptors(descriptors: IOptionsDescriptor[]): IPropsOptions[] {
+function parseDescriptors(descriptors: IPropsOptions[]): IPropsOptions[] {
 	if (descriptors.length === 0) {
 		return [{}];
 	} else {
 		const rootDescriptors = [...descriptors];
-		const { children, ...current } = rootDescriptors.splice(0, 1)[0];
+		const current = rootDescriptors.splice(0, 1)[0];
 
-		const otherDescriptors = children ? [ ...rootDescriptors, ...children ] : rootDescriptors;
-
-		const otherOptions = parseDescriptors(otherDescriptors);
+		const otherOptions = parseDescriptors(rootDescriptors);
 
 		return [ ...otherOptions, ...otherOptions.map((options) => ({ ...options, ...current })) ];
 	}

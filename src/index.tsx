@@ -27,7 +27,7 @@ export interface IDataTableCoreProps<RowData extends object> extends Partial<typ
 	data: ReadonlyArray<RowData>;
 	columns: ReadonlyArray<IColumn<RowData>>;
 
-	idAccessor?(datum: RowData): string;
+	idAccessor(datum: RowData): string;
 
 	children?: never;
 }
@@ -43,7 +43,7 @@ export interface IDataTableSortProps {
 
 export interface IDataTableSelectProps {
 	selectable?: boolean;
-	selectedRowsIds: string[];
+	selectedRowsIds?: string[];
 	onSelect(selectedRowsIds: string[]): void;
 }
 
@@ -104,14 +104,21 @@ export default class DataTable<RowData extends object> extends React.Component<I
 				className={classnames(tableClassName, this.props.tableClassName)}
 			>
 				<DataTableHeader
+					data={this.props.data}
 					columns={this.props.columns}
-					rowClassName={this.props.rowClassName}
-					headerCellClassName={this.props.headerCellClassName}
-					tableHeaderClassName={this.props.tableHeaderClassName}
+					idAccessor={this.props.idAccessor}
 
 					onChangeSorting={this.onChangeSorting}
 					isSortingDescendant={this.state.isSortingDescendant}
 					currentlySortedColumn={this.state.currentlySortedColumn}
+
+					selectable={this.props.selectable}
+					onSelect={this.props.onSelect}
+					selectedRowsIds={this.props.selectedRowsIds}
+
+					rowClassName={this.props.rowClassName}
+					headerCellClassName={this.props.headerCellClassName}
+					tableHeaderClassName={this.props.tableHeaderClassName}
 				/>
 
 				<DataTableBody
@@ -124,6 +131,10 @@ export default class DataTable<RowData extends object> extends React.Component<I
 
 					categoryLabel={this.props.categoryLabel}
 					categoryAccessor={this.props.categoryAccessor}
+
+					onSelect={this.props.onSelect}
+					selectable={this.props.selectable}
+					selectedRowsIds={this.props.selectedRowsIds}
 				/>
 			</table>
 		);

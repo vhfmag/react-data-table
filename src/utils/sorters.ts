@@ -13,7 +13,7 @@ export function defaultNoneSorter<T>(t1: Maybe<T>, t2: Maybe<T>) {
 		return -Infinity;
 	} else if (!isSome(t2)) {
 		return Infinity;
-	} else {
+	} /* istanbul ignore next */ else {
 		throw new TypeError("Improper call to defaultNoneSorter: one of the operands should be null or undefined");
 	}
 }

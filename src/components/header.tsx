@@ -1,3 +1,4 @@
+import { SelectionCell } from "./cell";
 import {
 	getColumnsColSpan,
 	linkColumnsToParent,
@@ -15,14 +16,7 @@ import { headerCellClassName, rowClassName, tableHeaderClassName } from "../util
 import * as React from "react";
 import { IColumn, IDataTableProps } from "..";
 import classnames from "classnames";
-
-export interface IDataTableHeaderProps<RowData extends object>
-	extends Pick<IDataTableProps<RowData>, "columns" | "headerCellClassName" | "tableHeaderClassName" | "rowClassName"> {
-	currentlySortedColumn: string | undefined;
-	isSortingDescendant: boolean;
-
-	onChangeSorting(column: string, descendant: boolean): void;
-}
+import { createSelector } from "reselect";
 
 export interface ISortArrowProps {
 	active: boolean;
@@ -96,7 +90,37 @@ export class DataTableHeaderCell<RowData extends object, CellData> extends React
 	}
 }
 
+export interface IDataTableHeaderProps<RowData extends object>
+	extends Pick<IDataTableProps<RowData>, "columns" | "headerCellClassName" | "tableHeaderClassName" | "rowClassName" | "selectedRowsIds" | "onSelect" | "selectable" | "data" | "idAccessor"> {
+	currentlySortedColumn: string | undefined;
+	isSortingDescendant: boolean;
+
+	onChangeSorting(column: string, descendant: boolean): void;
+}
+
 export default class DataTableHeader<RowData extends object = object> extends React.PureComponent<IDataTableHeaderProps<RowData>, {}> {
+	private areAllRowsSelected = createSelector(
+		(props: IDataTableHeaderProps<RowData>) => props.selectedRowsIds,
+		(props: IDataTableHeaderProps<RowData>) => props.data,
+		(props: IDataTableHeaderProps<RowData>) => props.idAccessor,
+		(selected, rows, idAccessor) => rows && rows.length > 0 ? rows.every((row) => (selected || []).includes(idAccessor(row))) : false,
+	);
+
+	private toggleAllRows = () => {
+		/* istanbul ignore if */
+		if (!this.props.selectable || !this.props.onSelect) {
+			throw new Error("Invalid DataTableHeader.toggleAllRows call: table isn't selectable or onSelect is not defined");
+		}
+
+		const areAllRowsSelected = this.areAllRowsSelected(this.props);
+
+		if (areAllRowsSelected) {
+			this.props.onSelect([]);
+		} else {
+			this.props.onSelect(this.props.data.map((datum) => this.props.idAccessor(datum)));
+		}
+	}
+
 	public render() {
 		// const rowSpan = getColumnsMaxRowSpan(this.props.columns);
 		const parented = linkColumnsToParent(this.props.columns);
@@ -109,6 +133,18 @@ export default class DataTableHeader<RowData extends object = object> extends Re
 
 			rows.push(
 				<tr key={level} className={classnames(rowClassName, this.props.rowClassName)}>
+					{
+						level === "0" && this.props.selectable && this.props.onSelect ? (
+							<DataTableHeaderSelectionCell
+								selected={this.areAllRowsSelected(this.props)}
+								onSelect={this.toggleAllRows}
+								disabled={!this.props.data || this.props.data.length === 0}
+
+								headerCellClassName={this.props.headerCellClassName}
+							/>
+						) : null
+					}
+
 					{
 						rowColumns.map((column) => (
 							<DataTableHeaderCell
@@ -132,6 +168,25 @@ export default class DataTableHeader<RowData extends object = object> extends Re
 			<thead className={classnames(tableHeaderClassName, this.props.tableHeaderClassName)}>
 				{rows}
 			</thead>
+		);
+	}
+}
+
+export interface IDataTableHeaderSelectionCell<RowData extends object> extends Pick<IDataTableHeaderProps<RowData>, "headerCellClassName"> {
+	selected: boolean;
+	onSelect(): void;
+	disabled?: boolean;
+}
+
+export class DataTableHeaderSelectionCell<RowData extends object> extends React.PureComponent<IDataTableHeaderSelectionCell<RowData>> {
+	public render() {
+		return (
+			<SelectionCell
+				isHeader
+				selected={this.props.selected}
+				onChange={this.props.onSelect}
+				className={classnames(this.props.headerCellClassName, headerCellClassName)}
+			/>
 		);
 	}
 }

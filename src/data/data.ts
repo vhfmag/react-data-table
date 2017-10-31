@@ -30,6 +30,7 @@ export const testClasses: typeof classes = {
 	tableBodyClassName: "tableBody",
 	headerCellClassName: "headerCell",
 	tableHeaderClassName: "tableHeader",
+	selectedRowClassName: "selectedRow",
 };
 
 const stateRoles = [ "Bahia", "São Paulo", "Sergipe", undefined ];

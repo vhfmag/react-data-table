@@ -17,7 +17,6 @@
         "lib": [ "dom", "es2017" ],
         "moduleResolution": "node",
         "noUnusedParameters": true,
-        "removeComments": true,
         "importHelpers": true,
         "noEmitHelpers": false,
         "isolatedModules": false,

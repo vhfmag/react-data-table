@@ -1,10 +1,11 @@
+import { DataTableHeaderCell } from "../../../components/header";
 import { flattenColumns, getColumnsColSpan } from "../../../utils/helpers/columns";
 import DataTableBody from "../../../components/body";
 import DataTableHeader from "../../../components/header";
 import "jest";
 import "../../setup";
 import { expect } from "chai";
-import DataTableRow, { parseDatum } from "../../../components/row";
+import DataTableRow, { DataTableCell, parseDatum } from "../../../components/row";
 import * as publicClasses from "../../../utils/publicClassNames";
 import { shouldntThrowWithProps } from "../../assertions";
 
@@ -38,13 +39,15 @@ function tableShouldRenderCorrectTags<T extends object = object>(wrapper: ReactW
 function testTableContentWithProps<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
 	it("each column's content should resemble it's descriptor's label", function() {
 		const props = wrapper.props();
+		const columns = flattenColumns(props.columns);
 
-		wrapper.find("thead th").everyWhere((header) => {
-			const column = props.columns.find((col) => col.id === header.key());
+		wrapper.find(DataTableHeader).find(DataTableHeaderCell).everyWhere((header) => {
+			const id = header.props().column.id;
+			const column = columns.find((col) => col.id === id);
 
-			if (!column) throw new Error("Column descriptor not found");
+			if (!column) throw new Error(`Could not found equivalent IColumn for column ${id}`);
 
-			return header.text() === mount(<span>{column.label} </span>).text();
+			return header.text() === mount(<span>{column.label}</span>).text();
 		});
 	});
 
@@ -93,38 +96,38 @@ function testTableHeader<T extends object = object>(wrapper: ReactWrapper<IDataT
 }
 
 function testTablePublicClassNames<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>, classNames: Partial<typeof publicClasses>, qualifier: string)  {
-	describe(`should have the right ${qualifier + " "}classes at the right tags`, function() {
-		it(`should have the right ${qualifier + " "}class at <table>`, function() {
+	describe(`should have ${qualifier + " "}classes at the right tags`, function() {
+		it(`should have ${qualifier + " "}class at <table>`, function() {
 			if (classNames.tableClassName) {
 				expect(wrapper.find("table").everyWhere((table) => table.hasClass(classNames.tableClassName!))).to.be.true;
 			}
 		});
 
-		it(`should have the right ${qualifier + " "}class at <tbody>`, function() {
+		it(`should have ${qualifier + " "}class at <tbody>`, function() {
 			if (classNames.tableBodyClassName) {
 				expect(wrapper.find("tbody").everyWhere((tbody) => tbody.hasClass(classNames.tableBodyClassName!))).to.be.true;
 			}
 		});
 
-		it(`should have the right ${qualifier + " "}class at <thead>`, function() {
+		it(`should have ${qualifier + " "}class at <thead>`, function() {
 			if (classNames.tableHeaderClassName) {
 				expect(wrapper.find("thead").everyWhere((thead) => thead.hasClass(classNames.tableHeaderClassName!))).to.be.true;
 			}
 		});
 
-		it(`should have the right ${qualifier + " "}class at <tr>`, function() {
+		it(`should have ${qualifier + " "}class at <tr>`, function() {
 			if (classNames.rowClassName) {
 				expect(wrapper.find(DataTableRow).find("tr").everyWhere((tr) => tr.hasClass(classNames.rowClassName!))).to.be.true;
 			}
 		});
 
-		it(`should have the right ${qualifier + " "}class at <td>`, function() {
+		it(`should have ${qualifier + " "}class at <td>`, function() {
 			if (classNames.cellClassName) {
 				expect(wrapper.find("td").everyWhere((td) => td.hasClass(classNames.cellClassName!))).to.be.true;
 			}
 		});
 
-		it(`should have the right ${qualifier + " "}class at <th>`, function() {
+		it(`should have ${qualifier + " "}class at <th>`, function() {
 			if (classNames.headerCellClassName) {
 				expect(wrapper.find("th").everyWhere((th) => th.hasClass(classNames.headerCellClassName!))).to.be.true;
 			}
@@ -161,7 +164,7 @@ function tableShouldHaveNRows<T extends object = object>(wrapper: ReactWrapper<I
 function tableShouldHaveNColumns<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>, n: number) {
 	it(`should have ${n} columns`, function() {
 		expect(
-			wrapper.find("thead").find("tr").find("th"),
+			wrapper.find(DataTableHeader).find(DataTableHeaderCell),
 		).to.have.length(n);
 	});
 }
@@ -172,13 +175,13 @@ function tableRowsShouldHaveNCells<T extends object = object>(wrapper: ReactWrap
 			wrapper
 				.find("tbody")
 				.find(DataTableRow)
-				.everyWhere((row) => row.find("td").length === n),
+				.everyWhere((row) => row.find(DataTableCell).length === n),
 		).to.be.true;
 	});
 }
 
 function testIdAccessor<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>) {
-	it("each row should have id accessor as key or row's index as fallback", function() {
+	it("each row should have id accessor as key", function() {
 		expect(
 			wrapper
 				.find("tbody")
@@ -187,11 +190,7 @@ function testIdAccessor<T extends object = object>(wrapper: ReactWrapper<IDataTa
 					const props = wrapper.props();
 					const rowProps = row.props();
 
-					if (props.idAccessor) {
-						return row.key() === props.idAccessor(rowProps.datum);
-					} else {
-						return !isNaN(Number(row.key()));
-					}
+					return row.key() === props.idAccessor(rowProps.datum);
 				}),
 		);
 	});
