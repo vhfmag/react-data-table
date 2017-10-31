@@ -15,7 +15,6 @@ export interface IPropsOptions {
 
 	// category features
 	categories?: boolean;
-	categoryLabel?: boolean;
 
 	// sorting features
 	sortable?: boolean;
@@ -35,7 +34,6 @@ const partialOptions: IPropsOptions[] = [
 	{ sortable: true },
 	{ defaultSort: true },
 	{ categories: true },
-	{ categoryLabel: true },
 	{ selectable: true },
 	{ undefinedSelected: true },
 ];
@@ -43,7 +41,6 @@ const partialOptions: IPropsOptions[] = [
 const optionsDescriptions: { [key in keyof IPropsOptions]: string } = {
 	emptyData: "empty state",
 	categories: "categories features",
-	categoryLabel: "category label",
 	sortable: "sorting feature",
 	defaultSort: "default sort",
 	nestedColumns: "nested columns",
@@ -166,26 +163,25 @@ export function generatePropsWithFeatures(options: IPropsOptions): IDataTablePro
 		...testClasses,
 	};
 
-	const categoryProps: IDataTableCategoryProps<IEmployee> = {
-		categoryAccessor: (employee) => employee.role,
-		categoryLabel: options.categoryLabel ? "Cargo" : undefined,
+	const categoryProps: Partial<IDataTableCategoryProps<IEmployee>> = {
+		categoryAccessor: options.categories ? (employee) => employee.role : undefined,
 	};
 
 	const sortProps: IDataTableSortProps = {
 		defaultSort: options.defaultSort ? "nome" : undefined,
 	};
 
-	const selectionProps: IDataTableSelectProps = {
+	const selectionProps: Partial<IDataTableSelectProps> = {
 		selectable: options.selectable,
-		onSelect: () => { return; },
-		selectedRowsIds: options.undefinedSelected ? undefined : [],
+		onSelect: options.selectable ? () => { return; } : undefined,
+		selectedRowsIds: options.selectable && !options.undefinedSelected ? [] : undefined,
 	};
 
 	return {
 		...coreProps,
-		...(options.sortable ? sortProps : {}),
-		...(options.categories ? categoryProps : {}),
-		...(options.selectable ? selectionProps : {}),
+		...sortProps,
+		...categoryProps,
+		...selectionProps,
 	};
 }
 

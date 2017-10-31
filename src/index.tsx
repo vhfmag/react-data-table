@@ -34,7 +34,6 @@ export interface IDataTableCoreProps<RowData extends object> extends Partial<typ
 
 export interface IDataTableCategoryProps<RowData extends object> {
 	categoryAccessor(row: RowData): string;
-	categoryLabel?: React.ReactNode;
 }
 
 export interface IDataTableSortProps {
@@ -100,9 +99,7 @@ export default class DataTable<RowData extends object> extends React.Component<I
 		);
 
 		return (
-			<table
-				className={classnames(tableClassName, this.props.tableClassName)}
-			>
+			<table className={classnames(tableClassName, this.props.tableClassName)}>
 				<DataTableHeader
 					data={this.props.data}
 					columns={this.props.columns}
@@ -125,16 +122,16 @@ export default class DataTable<RowData extends object> extends React.Component<I
 					data={sortedData}
 					columns={flattenedColumns}
 					idAccessor={this.props.idAccessor}
-					rowClassName={this.props.rowClassName}
-					cellClassName={this.props.cellClassName}
-					tableBodyClassName={this.props.tableBodyClassName}
 
-					categoryLabel={this.props.categoryLabel}
 					categoryAccessor={this.props.categoryAccessor}
 
 					onSelect={this.props.onSelect}
 					selectable={this.props.selectable}
 					selectedRowsIds={this.props.selectedRowsIds}
+
+					rowClassName={this.props.rowClassName}
+					cellClassName={this.props.cellClassName}
+					tableBodyClassName={this.props.tableBodyClassName}
 				/>
 			</table>
 		);

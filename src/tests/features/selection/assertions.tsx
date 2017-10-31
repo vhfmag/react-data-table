@@ -3,7 +3,7 @@ import { StatefulSelectedWrapper } from "../../../helpers/tableWrapper";
 import { DataTableHeaderSelectionCell } from "../../../components/header";
 import DataTableHeader from "../../../components/header";
 import DataTableBody from "../../../components/body";
-import DataTableRow, { DataTableBodySelectionCell } from "../../../components/row";
+import DataTableRow, { DataTableCategorySelectionCell, DataTableBodySelectionCell } from "../../../components/row";
 import DataTable, { IDataTableProps } from "../../../";
 import "jest";
 import "../../setup";
@@ -70,6 +70,33 @@ export function testTableRowSelectionWithProps<T extends object = object>(props:
 							updateWrappers();
 
 							const { selected: renewSelected } = wrapper.find(DataTableBody).find(DataTableBodySelectionCell).find({ id }).props();
+							expect(renewSelected, "selected props should change again after second click").to.be.equal(selected);
+						});
+					});
+				}
+			});
+
+			describe("each DataTableCategorySelectionCell", () => {
+				const selectionCells = wrapper.find(DataTableBody).find(DataTableCategorySelectionCell).map((v) => v);
+
+				for (const selectionCell of selectionCells) {
+					describe(`selection cell of category '${selectionCell.props().category}'`, function () {
+						describe("onSelect should be called on change", () => {
+							const { category, selected } = selectionCell.props();
+
+							parent.onSelect.reset();
+							selectionCell.find(SelectionCell).find("input").simulate("change", { target: { checked: !selected } });
+							expect(parent.onSelect.called, "onSelect should be called").to.be.true;
+
+							updateWrappers();
+
+							const { selected: newSelected } = wrapper.find(DataTableBody).find(DataTableCategorySelectionCell).find({ category }).props();
+							expect(newSelected, "selected props should have changed after react update").not.to.be.equal(selected);
+
+							selectionCell.find(SelectionCell).find("input").simulate("change", { target: { checked: !newSelected } });
+							updateWrappers();
+
+							const { selected: renewSelected } = wrapper.find(DataTableBody).find(DataTableCategorySelectionCell).find({ category }).props();
 							expect(renewSelected, "selected props should change again after second click").to.be.equal(selected);
 						});
 					});

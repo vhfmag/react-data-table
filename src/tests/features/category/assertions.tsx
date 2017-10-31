@@ -62,16 +62,8 @@ export function testTableCategoryFeaturesWithProps<T extends object = object>(pr
 	it("should repass right category to each rule row", () => {
 		expect(
 			wrapper.find(DataTableCategorySection).everyWhere((section) => {
-				return section.find(DataTableRuleRow).props().content === section.props().category;
+				return section.find(DataTableRuleRow).props().category === section.props().category;
 			}),
-		).to.be.true;
-	});
-
-	it("should repass label to rule rows", () => {
-		expect(
-			wrapper.find(DataTableRuleRow).everyWhere(
-				(ruleRow) => ruleRow.props().label === wrapper.props().categoryLabel,
-			),
 		).to.be.true;
 	});
 }

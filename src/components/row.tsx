@@ -76,9 +76,12 @@ export class DataTableCell<RowData extends object> extends React.PureComponent<I
 
 export interface IDataTableRuleRowProps extends Partial<Pick<typeof classes, "ruleRowClassName" | "cellClassName">> {
 	colSpan: number;
-	content: string;
-	label?: React.ReactNode;
+	category: string;
 	children?: never;
+
+	onSelect?(): void;
+	selected?: boolean;
+	selectable?: boolean;
 }
 
 export class DataTableRuleRow extends React.PureComponent<IDataTableRuleRowProps, {}> {
@@ -87,12 +90,21 @@ export class DataTableRuleRow extends React.PureComponent<IDataTableRuleRowProps
 			<tr
 				className={classnames(this.props.ruleRowClassName, classes.ruleRowClassName)}
 			>
+				{
+					this.props.selectable && this.props.onSelect ? (
+						<DataTableCategorySelectionCell
+							category={this.props.category}
+							onSelect={this.props.onSelect}
+							selected={!!this.props.selected}
+							cellClassName={this.props.cellClassName}
+						/>
+					) : null
+				}
 				<td
 					colSpan={this.props.colSpan}
 					className={classnames(this.props.cellClassName, classes.cellClassName)}
 				>
-					{this.props.label && (<span><b>{this.props.label}</b>: </span>)}
-					{this.props.content}
+					{this.props.category}
 				</td>
 			</tr>
 		);
@@ -103,12 +115,12 @@ export interface IDataTableBodySelectionCellProps
 	extends Pick<IDataTableRowProps, "cellClassName"> {
 	id: string;
 	selected: boolean;
-	onSelect(id: string, selected: boolean): void;
+	onSelect(id: string): void;
 }
 
 export class DataTableBodySelectionCell extends React.PureComponent<IDataTableBodySelectionCellProps> {
-	private onSelect = (selected: boolean) => {
-		this.props.onSelect(this.props.id, selected);
+	private onSelect = () => {
+		this.props.onSelect(this.props.id);
 	}
 
 	public render() {
@@ -116,6 +128,25 @@ export class DataTableBodySelectionCell extends React.PureComponent<IDataTableBo
 			<SelectionCell
 				selected={!!this.props.selected}
 				onChange={this.onSelect}
+				className={classnames(this.props.cellClassName, classes.cellClassName)}
+			/>
+		);
+	}
+}
+
+export interface IDataTableCategorySelectionCellProps
+	extends Pick<IDataTableRowProps, "cellClassName"> {
+	selected: boolean;
+	onSelect(): void;
+	category: string;
+}
+
+export class DataTableCategorySelectionCell extends React.PureComponent<IDataTableCategorySelectionCellProps> {
+	public render() {
+		return (
+			<SelectionCell
+				selected={!!this.props.selected}
+				onChange={this.props.onSelect}
 				className={classnames(this.props.cellClassName, classes.cellClassName)}
 			/>
 		);

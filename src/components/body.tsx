@@ -11,7 +11,7 @@ import { createSelector } from "reselect";
 export interface IDataTableBodyProps<RowData extends object>
 	extends Pick<
 		IDataTableProps<RowData>,
-		"columns" | "tableBodyClassName" | "cellClassName" | "rowClassName" | "idAccessor" | "categoryAccessor" | "categoryLabel" | "data" | "selectable" | "selectedRowsIds" | "onSelect"
+		"columns" | "tableBodyClassName" | "cellClassName" | "rowClassName" | "idAccessor" | "categoryAccessor" | "data" | "selectable" | "selectedRowsIds" | "onSelect"
 	> {
 }
 
@@ -33,24 +33,44 @@ const mapDatumToComponent = <RowData extends object = object>(props: IDataTableB
 };
 
 export interface IDataTableCategorySectionProps<RowData extends object>
-	extends ObjectOmit<IDataTableBodyProps<RowData>, "categoryAccessor"> {
+	extends ObjectOmit<IDataTableBodyProps<RowData>, "onSelect"> {
 	category: string;
-	onSelectRow?: IDataTableRowProps<RowData>["onSelect"];
+	onSelectRows(selected: boolean, ...ids: string[]): void;
 }
 
 export class DataTableCategorySection<RowData extends object> extends React.PureComponent<IDataTableCategorySectionProps<RowData>> {
+	private areAllCategoryRowsSelected = createSelector(
+		(props: IDataTableCategorySectionProps<RowData>) => props.data,
+		(props: IDataTableCategorySectionProps<RowData>) => props.idAccessor,
+		(props: IDataTableCategorySectionProps<RowData>) => props.selectedRowsIds,
+		(data, idAccessor, selectedRowsIds) => selectedRowsIds && data.every((row) => selectedRowsIds.includes(idAccessor(row))) || false,
+	);
+
+	private onSelectCategory = () => {
+		const areAllRowsSelected = this.areAllCategoryRowsSelected(this.props);
+		this.props.onSelectRows(!areAllRowsSelected, ...this.props.data.map((row) => this.props.idAccessor(row)));
+	}
+
+	private onSelectRow = (row: string) => {
+		this.props.onSelectRows(!(this.props.selectedRowsIds || []).includes(row), row);
+	}
+
 	public render() {
 		return [
 			(
 				<DataTableRuleRow
 					key="rule"
-					content={this.props.category}
-					label={this.props.categoryLabel}
-					colSpan={getColumnsColSpan(this.props.columns) + (this.props.selectable && this.props.onSelect ? 1 : 0)}
+					category={this.props.category}
+					colSpan={getColumnsColSpan(this.props.columns) + (this.props.selectable ? 1 : 0)}
+
 					cellClassName={this.props.cellClassName}
+
+					onSelect={this.onSelectCategory}
+					selectable={this.props.selectable}
+					selected={this.areAllCategoryRowsSelected(this.props)}
 				/>
 			),
-			...this.props.data.map(mapDatumToComponent(this.props, this.props.onSelectRow)),
+			...this.props.data.map(mapDatumToComponent(this.props, this.onSelectRow)),
 		];
 	}
 }
@@ -62,14 +82,18 @@ export default class DataTableBody<RowData extends object = object> extends Reac
 		groupBy,
 	);
 
-	private onSelect = (id: string) => {
+	private onSelectRow = (id: string) => {
+		this.onSelect(!(this.props.selectedRowsIds || []).includes(id), id);
+	}
+
+	private onSelect = (selected: boolean, ...ids: string[]) => {
 		/* istanbul ignore if */
 		if (!this.props.onSelect) {
 			throw new Error("Invalid state: calling body's on select without a props' onSelect defined");
 		}
 
 		const oldSelected = this.props.selectedRowsIds || [];
-		const newSelected = oldSelected.includes(id) ? oldSelected.filter((rowId) => rowId !== id) : [...oldSelected, id];
+		const newSelected = selected ? [...new Set([...oldSelected, ...ids])] : oldSelected.filter((rowId) => !ids.includes(rowId));
 
 		this.props.onSelect(newSelected);
 	}
@@ -88,11 +112,11 @@ export default class DataTableBody<RowData extends object = object> extends Reac
 								{...this.props}
 								key={category}
 								category={category}
-								onSelectRow={this.onSelect}
+								onSelectRows={this.onSelect}
 								data={rowsDictionary[category]}
 							/>
 						))
-					) : this.props.data.map(mapDatumToComponent(this.props, this.onSelect))
+					) : this.props.data.map(mapDatumToComponent(this.props, this.onSelectRow))
 				}
 			</tbody>
 		);
