@@ -1,8 +1,8 @@
 import { classNamePrefix } from "./consts";
 
-export const sortArrowClassName = classNamePrefix + "sort-arrow";
-export const activeSortArrowClassName = classNamePrefix + "sort-arrow--active";
-export const ascendantSortArrowClassName = classNamePrefix + "sort-arrow--ascendant";
-export const descendantSortArrowClassName = classNamePrefix + "sort-arrow--descendant";
+export const sortArrowClassName = classNamePrefix + "sortArrow";
+export const activeSortArrowClassName = classNamePrefix + "sortArrow--active";
+export const ascendantSortArrowClassName = classNamePrefix + "sortArrow--ascendant";
+export const descendantSortArrowClassName = classNamePrefix + "sortArrow--descendant";
 
-export const selectionCellClassName = classNamePrefix + "selection-cell";
+export const selectionCellClassName = classNamePrefix + "selectionCell";

@@ -2,38 +2,43 @@ import { getColumnsColSpan } from "../utils/helpers/columns";
 import * as React from "react";
 import classnames from "classnames";
 import DataTableRow, { DataTableCategoryRow, IDataTableRowProps } from "./row";
-import { IDataTableProps } from "..";
+import { IDataTableProps, INullableObject } from "..";
 import { tableBodyClassName } from "../utils/publicClassNames";
 import { ObjectOmit } from "typelevel-ts";
 import groupBy from "lodash/groupBy";
 import { createSelector } from "reselect";
 
-export interface IDataTableBodyProps<RowData extends object>
-	extends Pick<
-		IDataTableProps<RowData>,
-		"columns" | "tableBodyClassName" | "cellClassName" | "rowClassName" | "idAccessor" | "categoryAccessor" | "data" | "selectable" | "selectedRowsIds" | "onSelect"
-	> {
-}
+const totalDatumToComponent = <RowData extends object>(props: IDataTableBodyProps<RowData>, id: string, isCategory?: boolean) => (totalData: INullableObject<RowData>) => {
+	const fakeProps: IDataTableBodyProps<INullableObject<RowData>> = { ...props, idAccessor: () => id };
 
-const mapDatumToComponent = <RowData extends object = object>(props: IDataTableBodyProps<RowData>, onSelect?: IDataTableRowProps<RowData>["onSelect"]) => (rowData: RowData) => {
+	return mapDatumToComponent(fakeProps, undefined, true, isCategory)(totalData);
+};
+
+const mapDatumToComponent = <RowData extends object>(props: IDataTableBodyProps<RowData>, onSelect?: IDataTableRowProps<RowData>["onSelect"], isAggregated?: boolean, isCategory?: boolean) => (rowData: RowData) => {
 	return (
 		<DataTableRow
 			datum={rowData}
 			columns={props.columns}
 			id={props.idAccessor(rowData)}
 			key={props.idAccessor(rowData)}
-			rowClassName={props.rowClassName}
-			cellClassName={props.cellClassName}
 
 			onSelect={onSelect}
 			selectable={props.selectable}
 			selected={(props.selectedRowsIds || []).includes(props.idAccessor(rowData))}
+
+			isCategory={isCategory}
+			isAggregated={isAggregated}
+
+			rowClassName={props.rowClassName}
+			cellClassName={props.cellClassName}
+			totalRowClassName={props.totalRowClassName}
+			categoryRowClassName={props.categoryRowClassName}
 		/>
 	);
 };
 
 export interface IDataTableCategorySectionProps<RowData extends object>
-	extends ObjectOmit<IDataTableBodyProps<RowData>, "onSelect"> {
+	extends ObjectOmit<IDataTableBodyProps<RowData>, "onSelect" | "hideBodyTotal"> {
 	category: string;
 	onSelectRows(selected: boolean, ...ids: string[]): void;
 }
@@ -44,6 +49,19 @@ export class DataTableCategorySection<RowData extends object> extends React.Pure
 		(props: IDataTableCategorySectionProps<RowData>) => props.idAccessor,
 		(props: IDataTableCategorySectionProps<RowData>) => props.selectedRowsIds,
 		(data, idAccessor, selectedRowsIds) => selectedRowsIds && data.every((row) => selectedRowsIds.includes(idAccessor(row))) || false,
+	);
+
+	private computeTotalData = createSelector(
+		(props: IDataTableCategorySectionProps<RowData>) => props.data,
+		(props: IDataTableCategorySectionProps<RowData>) => props.category,
+		(props: IDataTableCategorySectionProps<RowData>) => props.totalAccessor,
+		(data, category, totalAccessor) => {
+			if (totalAccessor) {
+				return totalAccessor(data, category);
+			}
+
+			throw new Error("Invalid call to computeTotalData");
+		},
 	);
 
 	private onSelectCategory = () => {
@@ -61,25 +79,52 @@ export class DataTableCategorySection<RowData extends object> extends React.Pure
 				<DataTableCategoryRow
 					key="rule"
 					category={this.props.category}
-					colSpan={getColumnsColSpan(this.props.columns) + (this.props.selectable ? 1 : 0)}
+					colSpan={getColumnsColSpan(this.props.columns)}
 
+					rowClassName={this.props.rowClassName}
 					cellClassName={this.props.cellClassName}
+					categoryRowClassName={this.props.categoryRowClassName}
 
 					onSelect={this.onSelectCategory}
 					selectable={this.props.selectable}
 					selected={this.areAllCategoryRowsSelected(this.props)}
-				/>
+				>
+					{
+						this.props.totalAccessor && !this.props.hideCategoryTotal ? (
+							totalDatumToComponent(this.props, this.props.category, true)(this.computeTotalData(this.props))
+						) : undefined
+					}
+				</DataTableCategoryRow>
 			),
 			...this.props.data.map(mapDatumToComponent(this.props, this.onSelectRow)),
 		];
 	}
 }
 
+export interface IDataTableBodyProps<RowData extends object>
+	extends Pick<
+		IDataTableProps<RowData>,
+		"columns" | "tableBodyClassName" | "cellClassName" | "rowClassName" | "idAccessor" | "categoryAccessor" | "data" | "selectable" | "selectedRowsIds" | "onSelect" | "totalAccessor" | "hideBodyTotal" | "hideCategoryTotal" | "totalRowClassName" | "selectedRowClassName" | "categoryRowClassName"
+	> {
+}
+
 export default class DataTableBody<RowData extends object = object> extends React.PureComponent<IDataTableBodyProps<RowData>, {}> {
-	protected groupRowsByCategory = createSelector(
+	private groupRowsByCategory = createSelector(
 		(props: IDataTableBodyProps<RowData>) => props.data,
 		(props: IDataTableBodyProps<RowData>) => props.categoryAccessor,
 		groupBy,
+	);
+
+	private computeTotalData = createSelector(
+		(props: IDataTableBodyProps<RowData>) => props.data,
+		(props: IDataTableBodyProps<RowData>) => props.totalAccessor,
+		(data, totalAccessor) => {
+			if (totalAccessor) {
+				return totalAccessor(data);
+			}
+
+			throw new Error("Invalid call to computeTotalData");
+		},
 	);
 
 	private onSelectRow = (id: string) => {
@@ -106,6 +151,12 @@ export default class DataTableBody<RowData extends object = object> extends Reac
 				className={classnames(tableBodyClassName, this.props.tableBodyClassName)}
 			>
 				{
+					this.props.totalAccessor && !this.props.hideBodyTotal ? (
+						totalDatumToComponent(this.props, "$total")(this.computeTotalData(this.props))
+					) : null
+				}
+
+				{
 					rowsDictionary ? (
 						Object.keys(rowsDictionary).map((category) => (
 							<DataTableCategorySection
@@ -114,6 +165,7 @@ export default class DataTableBody<RowData extends object = object> extends Reac
 								category={category}
 								onSelectRows={this.onSelect}
 								data={rowsDictionary[category]}
+								categoryRowClassName={this.props.categoryRowClassName}
 							/>
 						))
 					) : this.props.data.map(mapDatumToComponent(this.props, this.onSelectRow))

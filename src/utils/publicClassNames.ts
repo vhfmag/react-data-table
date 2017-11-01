@@ -3,9 +3,11 @@ import { classNamePrefix } from "./consts";
 export const rowClassName = classNamePrefix + "row";
 export const cellClassName = classNamePrefix + "cell";
 export const tableClassName = classNamePrefix + "table";
-export const ruleRowClassName = classNamePrefix + "ruleRow";
 export const tableBodyClassName = classNamePrefix + "tableBody";
 export const headerCellClassName = classNamePrefix + "headerCell";
+export const categoryRowClassName = classNamePrefix + "categoryRow";
 export const tableHeaderClassName = classNamePrefix + "tableHeader";
 
-export const selectedRowClassName = classNamePrefix + "selected-row";
+// TODO: test those
+export const totalRowClassName = classNamePrefix + "totalRow";
+export const selectedRowClassName = classNamePrefix + "selectedRow";

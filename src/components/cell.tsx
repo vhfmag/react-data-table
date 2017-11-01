@@ -7,6 +7,7 @@ export interface ISelectionCell {
 	isHeader?: boolean;
 	disabled?: boolean;
 	className?: string;
+	rowSpan?: number;
 	onChange(selected: boolean): void;
 }
 
@@ -21,6 +22,7 @@ export class SelectionCell extends React.PureComponent<ISelectionCell> {
 
 		return (
 			<Element
+				rowSpan={this.props.rowSpan}
 				className={classnames(selectionCellClassName, this.props.className)}
 			>
 				<input

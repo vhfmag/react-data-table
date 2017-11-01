@@ -1,4 +1,4 @@
-import { dateSorter, numberSorter, stringSorter } from "../utils/sorters";
+import { dateSorter, isSome, numberSorter, stringSorter } from "../utils/sorters";
 import {
 	IColumn,
 	IDataTableCategoryProps,
@@ -6,6 +6,8 @@ import {
 	IDataTableProps,
 	IDataTableSelectProps,
 	IDataTableSortProps,
+	IDataTableTotalProps,
+	INullableObject,
 } from "..";
 import { employeeData, IBalance, IEmployee, testClasses } from "./data";
 
@@ -26,6 +28,9 @@ export interface IPropsOptions {
 	// row selection
 	selectable?: boolean;
 	undefinedSelected?: boolean;
+
+	// totalizing
+	totalized?: boolean;
 }
 
 const partialOptions: IPropsOptions[] = [
@@ -36,6 +41,7 @@ const partialOptions: IPropsOptions[] = [
 	{ categories: true },
 	{ selectable: true },
 	{ undefinedSelected: true },
+	{ totalized: true },
 ];
 
 const optionsDescriptions: { [key in keyof IPropsOptions]: string } = {
@@ -46,6 +52,7 @@ const optionsDescriptions: { [key in keyof IPropsOptions]: string } = {
 	nestedColumns: "nested columns",
 	selectable: "selectable",
 	undefinedSelected: "undefined selectedRowsIds prop",
+	totalized: "total feature",
 };
 
 function generateBalanceColumns(options: IPropsOptions, idPrefix: string): ReadonlyArray<IColumn<IBalance>> {
@@ -64,6 +71,8 @@ function generateBalanceColumns(options: IPropsOptions, idPrefix: string): Reado
 		},
 	];
 }
+
+const renderCurrency = (v: number | null | undefined) => isSome(v) ? v.toLocaleString("pt-br", { style: "currency", currency: "BRL" }) : null;
 
 function generateColumnsWithFeatures(options: IPropsOptions): ReadonlyArray<IColumn<IEmployee>> {
 	return [
@@ -92,7 +101,7 @@ function generateColumnsWithFeatures(options: IPropsOptions): ReadonlyArray<ICol
 				{
 					id: "nome",
 					label: "Nome completo",
-					accessor: (row: IEmployee) => `${row.firstName} ${row.lastName}`,
+					accessor: (row: IEmployee) => [row.firstName, row.lastName].filter((v) => v).join(" "),
 					sortFunction: options.sortable ? stringSorter : undefined,
 				},
 			]
@@ -102,6 +111,7 @@ function generateColumnsWithFeatures(options: IPropsOptions): ReadonlyArray<ICol
 			label: "Idade",
 			accessor: (row) => row.age,
 			sortFunction: options.sortable ? numberSorter : undefined,
+			renderAggregate: (val: number | null | undefined) => isSome(val) ? val.toFixed(0) + " (média)" : null,
 		},
 		{
 			id: "state",
@@ -113,7 +123,7 @@ function generateColumnsWithFeatures(options: IPropsOptions): ReadonlyArray<ICol
 			id: "birthday",
 			label: "Nascimento",
 			accessor: (row) => row.birthday,
-			renderCell: (d: Date) => d.toDateString(),
+			renderCell: (d: Date | null | undefined) => isSome(d) ? d.toLocaleDateString("pt-br") : null,
 			sortFunction: options.sortable ? dateSorter : undefined,
 		},
 		{
@@ -121,7 +131,7 @@ function generateColumnsWithFeatures(options: IPropsOptions): ReadonlyArray<ICol
 			label: "Saldo",
 			accessor: (row) => row.balance,
 			sortFunction: options.sortable ? numberSorter : undefined,
-			renderCell: (n: number) => n.toLocaleString("pt-br", { style: "currency", currency: "BRL" }),
+			renderCell: renderCurrency,
 		},
 		...(
 			options.nestedColumns ? [
@@ -135,18 +145,21 @@ function generateColumnsWithFeatures(options: IPropsOptions): ReadonlyArray<ICol
 							label: "Crédito",
 							accessor: (row: IEmployee["balanceDetails"]) => row.credit,
 							columns: generateBalanceColumns(options, "credit"),
+							renderCell: renderCurrency,
 						},
 						{
 							id: "debit",
 							label: "Débito",
 							accessor: (row: IEmployee["balanceDetails"]) => row.debit,
 							columns: generateBalanceColumns(options, "debit"),
+							renderCell: renderCurrency,
 						},
 						{
 							id: "cash",
 							label: "Dinheiro",
 							accessor: (row: IEmployee["balanceDetails"]) => row.cash,
 							columns: generateBalanceColumns(options, "cash"),
+							renderCell: renderCurrency,
 						},
 					],
 				},
@@ -177,9 +190,43 @@ export function generatePropsWithFeatures(options: IPropsOptions): IDataTablePro
 		selectedRowsIds: options.selectable && !options.undefinedSelected ? [] : undefined,
 	};
 
+	const totalProps: Partial<IDataTableTotalProps<IEmployee>> = {
+		totalAccessor:
+			options.totalized ?
+				(emps) => emps.reduce<INullableObject<IEmployee>>(
+					(emp1, emp2) => {
+						return {
+							age: (emp1.age || 0) + emp2.age / emps.length,
+							balance: (emp1.balance || 0) + emp2.balance,
+							balanceDetails: {
+								cash: {
+									toPay: (emp1.balanceDetails && emp1.balanceDetails.cash.toPay || 0) + emp2.balanceDetails.cash.toPay,
+									toReceive: (emp1.balanceDetails && emp1.balanceDetails.cash.toReceive || 0) + emp2.balanceDetails.cash.toReceive,
+								},
+								credit: {
+									toPay: (emp1.balanceDetails && emp1.balanceDetails.credit.toPay || 0) + emp2.balanceDetails.credit.toPay,
+									toReceive: (emp1.balanceDetails && emp1.balanceDetails.credit.toReceive || 0) + emp2.balanceDetails.credit.toReceive,
+								},
+								debit: {
+									toPay: (emp1.balanceDetails && emp1.balanceDetails.debit.toPay || 0) + emp2.balanceDetails.debit.toPay,
+									toReceive: (emp1.balanceDetails && emp1.balanceDetails.debit.toReceive || 0) + emp2.balanceDetails.debit.toReceive,
+								},
+							},
+							id: null,
+							birthday: null,
+							firstName: "Total",
+							lastName: null,
+						};
+					},
+					{},
+				)
+			: undefined,
+	};
+
 	return {
 		...coreProps,
 		...sortProps,
+		...totalProps,
 		...categoryProps,
 		...selectionProps,
 	};

@@ -13,14 +13,20 @@ import { createSelector } from "reselect";
 
 import moize from "moize";
 
+export type INullableObject<T extends object> = {
+	[key in keyof T]?: T[key] | null | undefined
+};
+
 export interface IColumn<RowData, CellData = any> {
 	id: string;
 	label: string | null;
-	accessor(v: RowData): CellData;
-	renderCell?(v: CellData): React.ReactNode;
+	accessor(v: RowData): CellData | null | undefined;
+	renderCell?(v: CellData | null | undefined): React.ReactNode;
 	sortFunction?: Comparator<CellData>;
 
 	columns?: ReadonlyArray<IColumn<CellData>>;
+
+	renderAggregate?(val: CellData | null | undefined): React.ReactNode;
 }
 
 export interface IDataTableCoreProps<RowData extends object> extends Partial<typeof classes> {
@@ -41,7 +47,7 @@ export interface IDataTableSortProps {
 }
 
 export interface IDataTableTotalProps<RowData extends object> {
-	totalAccessor(data: ReadonlyArray<RowData>): RowData;
+	totalAccessor(data: ReadonlyArray<RowData>, category?: string): INullableObject<RowData>;
 	hideBodyTotal?: boolean;
 	hideCategoryTotal?: boolean;
 }
@@ -135,6 +141,10 @@ export default class DataTable<RowData extends object> extends React.Component<I
 					onSelect={this.props.onSelect}
 					selectable={this.props.selectable}
 					selectedRowsIds={this.props.selectedRowsIds}
+
+					totalAccessor={this.props.totalAccessor}
+					hideBodyTotal={this.props.hideBodyTotal}
+					hideCategoryTotal={this.props.hideCategoryTotal}
 
 					rowClassName={this.props.rowClassName}
 					cellClassName={this.props.cellClassName}

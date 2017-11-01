@@ -2,7 +2,7 @@ export type Maybe<T> = T | null | undefined;
 export type Comparator<T> = (t1: Maybe<T>, t2: Maybe<T>) => number;
 export type OptimisticComparator<T> = (t1: T, t2: T) => number;
 
-function isSome<T>(t: Maybe<T>): t is T {
+export function isSome<T>(t: Maybe<T>): t is T {
 	return t !== undefined && t !== null;
 }
 

@@ -176,6 +176,7 @@ export interface IDataTableHeaderSelectionCell<RowData extends object> extends P
 	selected: boolean;
 	onSelect(): void;
 	disabled?: boolean;
+	rowSpan?: number;
 }
 
 export class DataTableHeaderSelectionCell<RowData extends object> extends React.PureComponent<IDataTableHeaderSelectionCell<RowData>> {
@@ -183,6 +184,7 @@ export class DataTableHeaderSelectionCell<RowData extends object> extends React.
 		return (
 			<SelectionCell
 				isHeader
+				rowSpan={this.props.rowSpan}
 				selected={this.props.selected}
 				onChange={this.props.onSelect}
 				className={classnames(this.props.headerCellClassName, headerCellClassName)}

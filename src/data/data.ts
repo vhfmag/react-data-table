@@ -26,9 +26,10 @@ export const testClasses: typeof classes = {
 	rowClassName: "row",
 	cellClassName: "cell",
 	tableClassName: "table",
-	ruleRowClassName: "ruleRow",
+	totalRowClassName: "totalRow",
 	tableBodyClassName: "tableBody",
 	headerCellClassName: "headerCell",
+	categoryRowClassName: "categoryRow",
 	tableHeaderClassName: "tableHeader",
 	selectedRowClassName: "selectedRow",
 };
