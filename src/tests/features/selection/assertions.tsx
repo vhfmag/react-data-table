@@ -12,8 +12,6 @@ import { mount, ReactWrapper } from "enzyme";
 
 import * as React from "react";
 
-import { shouldntThrowWithProps } from "../../assertions";
-
 function getWrappers<T extends object>(parentWrapper: ReactWrapper<IDataTableProps<T>>) {
 	const wrapper = parentWrapper.find(DataTable);
 	const parent = parentWrapper.instance() as StatefulSelectedWrapper<T>;
@@ -22,8 +20,6 @@ function getWrappers<T extends object>(parentWrapper: ReactWrapper<IDataTablePro
 }
 
 export function testTableRowSelectionWithProps<T extends object = object>(props: Readonly<IDataTableProps<T>>) {
-	shouldntThrowWithProps(props, DataTable);
-
 	const parentWrapper = mount(<StatefulSelectedWrapper {...props}/>);
 	let { parent, wrapper } = getWrappers(parentWrapper);
 

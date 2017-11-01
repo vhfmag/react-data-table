@@ -4,7 +4,6 @@ import { Comparator } from "../../../utils/sorters";
 import DataTableBody from "../../../components/body";
 import "jest";
 import "../../setup";
-import { shouldntThrowWithProps } from "../../assertions";
 import * as React from "react";
 import { mount, ReactWrapper } from "enzyme";
 import { expect } from "chai";
@@ -28,8 +27,6 @@ function getColumnWrapperById<T extends object>(wrapper: ReactWrapper<IDataTable
 }
 
 export function testTableSortFeaturesWithProps<T extends object = object>(props: IDataTableProps<T>) {
-	shouldntThrowWithProps(props, DataTable);
-
 	let wrapper = mount(<DataTable {...props}/>);
 
 	const columns = flattenColumns(props.columns);

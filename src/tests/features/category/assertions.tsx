@@ -3,7 +3,6 @@ import "../../setup";
 import { expect } from "chai";
 import * as React from "react";
 
-import { shouldntThrowWithProps } from "../../assertions";
 import { mount } from "enzyme";
 import DataTable, { IDataTableProps } from "../../../";
 import DataTableBody, { DataTableCategorySection } from "../../../components/body";
@@ -11,8 +10,6 @@ import DataTableHeader from "../../../components/header";
 import DataTableRow, { DataTableCategoryRow } from "../../../components/row";
 
 export function testTableCategoryFeaturesWithProps<T extends object = object>(props: Readonly<IDataTableProps<T>>) {
-	shouldntThrowWithProps(props, DataTable);
-
 	if (!props.categoryAccessor) throw new Error("Invalid test suite: trying to test categories without a category accessor");
 
 	const wrapper = mount<IDataTableProps<T>>(<DataTable {...props}/>);

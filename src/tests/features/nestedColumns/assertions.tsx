@@ -8,8 +8,6 @@ import { mount, ReactWrapper } from "enzyme";
 
 import * as React from "react";
 
-import { shouldntThrowWithProps } from "../../assertions";
-
 function testColumnsForRowSpan<T extends object = object>(cols: ReadonlyArray<IColumn<T>>, wrapper: ReactWrapper, level: number = 0) {
 	const maxRowSpan = getColumnsMaxRowSpan(cols);
 
@@ -63,8 +61,6 @@ function testColumnsForColSpan<T extends object = object>(cols: ReadonlyArray<IC
 }
 
 export function testTableNestedColumnsFeaturesWithProps<T extends object = object>(props: Readonly<IDataTableProps<T>>) {
-	shouldntThrowWithProps(props, DataTable);
-
 	if (!props.columns.some((col) => !!col.columns)) throw new TypeError("Invalid props for nested columns test: no nested columns");
 
 	const wrapper = mount<IDataTableProps<T>>(<DataTable {...props}/>);
