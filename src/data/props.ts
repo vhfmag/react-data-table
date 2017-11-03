@@ -66,12 +66,14 @@ function generateBalanceColumns(options: IPropsOptions, idPrefix: string): Reado
 		{
 			label: "A pagar",
 			id: `${idPrefix}.toPay`,
+			renderCell: renderCurrency,
 			accessor: (balance) => balance.toPay,
 			sortFunction: options.sortable ? numberSorter : undefined,
 		},
 		{
 			label: "A receber",
 			id: `${idPrefix}.toReceive`,
+			renderCell: renderCurrency,
 			accessor: (balance) => balance.toReceive,
 			sortFunction: options.sortable ? numberSorter : undefined,
 		},
@@ -129,6 +131,7 @@ function generateColumnsWithFeatures(options: IPropsOptions): ReadonlyArray<ICol
 			id: "old roles",
 			label: "Cargos Antigos",
 			accessor: (row) => row.oldRoles,
+			renderAggregate: () => undefined,
 			renderCell: (roles: string[] | undefined) => roles || "nenhum",
 		},
 		{
