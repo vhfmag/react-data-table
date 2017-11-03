@@ -33,12 +33,6 @@ table.table {
                 background-color: $main-blue;
                 color: white;
             }
-
-            &:not(.categoryRow):not(.totalRow) {
-                &:nth-of-type(even) {
-                    background-color: $light-gray;
-                }
-            }
         }
     }
 }
