@@ -55,6 +55,7 @@
     "file-saver": "^1.3.3",
     "git-url-parse": "^7.0.0",
     "jest": "^21.2.1",
+    "jest-html-reporter": "^0.5.3",
     "jsdom": "^11.1.0",
     "lodash": "^4.17.4",
     "moize": "^3.5.0",
@@ -110,6 +111,7 @@
       "/src/tests/",
       "/src/data/"
     ],
+    "testResultsProcessor": "./node_modules/jest-html-reporter",
     "mapCoverage": true,
     "collectCoverage": true,
     "moduleFileExtensions": [
@@ -122,5 +124,8 @@
       "raf/polyfill"
     ],
     "testRegex": "/src/tests/.*spec\\.(ts|tsx|js|jsx)$"
+  },
+  "jest-html-reporter": {
+    "includeFailureMsg": true
   }
 }

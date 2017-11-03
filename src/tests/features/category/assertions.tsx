@@ -27,7 +27,7 @@ export function testTableCategoryFeaturesWithProps<T extends object = object>(pr
 				(section) => {
 					const sectionCategory = section.props().category;
 
-					return section.find(DataTableRow).everyWhere(
+					return section.find(DataTableRow).not({ isAggregated: true }).everyWhere(
 						(row) => {
 							const datum = row.props().datum;
 							const rowCategory = wrapper.props().categoryAccessor!(datum);

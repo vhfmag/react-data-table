@@ -4,6 +4,7 @@ import { IColumn, IDataTableProps } from "..";
 import * as React from "react";
 import * as classes from "../utils/publicClassNames";
 import classnames from "classnames";
+import { lcm } from "../utils/math";
 
 export interface IDataTableRowProps
 	<RowData extends object = object>
@@ -32,59 +33,71 @@ export function parseDatum<T extends object = object, Z = any>(datum: T, column:
 
 export default class DataTableRow<RowData extends object = object> extends React.PureComponent<IDataTableRowProps<RowData>, {}> {
 	public render() {
-		return (
-			<tr
-				className={
-					classnames(
-						classes.rowClassName, this.props.rowClassName,
-						this.props.isAggregated && classes.totalRowClassName, this.props.isAggregated && this.props.totalRowClassName,
-						this.props.isCategory && classes.categoryRowClassName, this.props.isCategory && this.props.categoryRowClassName,
-					)
-				}
-			>
-				{
-					this.props.selectable ? (
-						this.props.onSelect ? (
-							<DataTableBodySelectionCell
-								cellClassName={this.props.cellClassName}
-								id={this.props.id}
-								onSelect={this.props.onSelect}
-								selected={!!this.props.selected}
-							/>
-						) : !this.props.isCategory ? (
-							<td/>
-						) : null
-					) : null
-				}
+		const rowClassNames = classnames(
+			classes.rowClassName, this.props.rowClassName,
+			this.props.isAggregated && classes.totalRowClassName, this.props.isAggregated && this.props.totalRowClassName,
+			this.props.isCategory && classes.categoryRowClassName, this.props.isCategory && this.props.categoryRowClassName,
+		);
 
-				{
-					this.props.columns.map((col) => (
-						<DataTableCell
-							column={col}
-							key={col.id}
-							datum={this.props.datum}
-							isAggregated={this.props.isAggregated}
-							cellClassName={this.props.cellClassName}
-						/>
-					))
-				}
-			</tr>
+		const rawCells = this.props.columns.map((col) => singleOrArrayToArray<React.ReactNode>(parseDatum(this.props.datum, col, this.props.isAggregated)));
+		const lcmRowSpan = rawCells.reduce((n, arr) => lcm(arr.length, n), 1);
+
+		return (
+			[...new Array(lcmRowSpan)].map(
+				(_, i) => (
+					<tr key={`inner_row@${i}`} className={rowClassNames}>
+						{
+							i === 0 && this.props.selectable ? (
+								this.props.onSelect ? (
+									<DataTableBodySelectionCell
+										cellClassName={this.props.cellClassName}
+										id={this.props.id}
+										onSelect={this.props.onSelect}
+										selected={!!this.props.selected}
+										rowSpan={lcmRowSpan}
+									/>
+								) : !this.props.isCategory ? (
+									<td className={classnames(this.props.cellClassName, classes.cellClassName)}/>
+								) : null
+							) : null
+						}
+
+						{
+							rawCells.map((colCell, j) => {
+								const isMultiple = (i % (lcmRowSpan / colCell.length)) === 0;
+								const element = i / (lcmRowSpan / colCell.length);
+
+								return isMultiple ? (
+									<DataTableCell
+										key={this.props.columns[j].id}
+										rowSpan={lcmRowSpan / colCell.length}
+										cellClassName={this.props.cellClassName}
+									>
+										{colCell[element]}
+									</DataTableCell>
+								) : undefined;
+							})
+						}
+					</tr>
+				),
+			)
 		);
 	}
 }
 
 export interface IDataTableCellProps<RowData extends object>
-	extends Pick<IDataTableRowProps<RowData>, "cellClassName" | "datum" | "isAggregated"> {
-	column: IColumn<RowData>;
+	extends Pick<IDataTableRowProps<RowData>, "cellClassName"> {
+	rowSpan?: number;
 }
 
 export class DataTableCell<RowData extends object> extends React.PureComponent<IDataTableCellProps<RowData>> {
 	public render() {
 		return (
 			<td
+				rowSpan={this.props.rowSpan}
 				className={classnames(classes.cellClassName, this.props.cellClassName)}
 			>
-				{parseDatum(this.props.datum, this.props.column, this.props.isAggregated)}
+				{this.props.children}
 			</td>
 		);
 	}
@@ -118,7 +131,7 @@ export class DataTableCategoryRow extends React.PureComponent<IDataTableCategory
 		return [
 			(
 				<tr
-					key={this.props.category}
+					key={`innerRow@${this.props.category}`}
 					className={classnames(
 						this.props.rowClassName, classes.rowClassName,
 						this.props.categoryRowClassName, classes.categoryRowClassName,
@@ -153,6 +166,7 @@ export interface IDataTableBodySelectionCellProps
 	id: string;
 	selected: boolean;
 	onSelect(id: string): void;
+	rowSpan?: number;
 }
 
 export class DataTableBodySelectionCell extends React.PureComponent<IDataTableBodySelectionCellProps> {
@@ -166,6 +180,7 @@ export class DataTableBodySelectionCell extends React.PureComponent<IDataTableBo
 				selected={!!this.props.selected}
 				onChange={this.onSelect}
 				className={classnames(this.props.cellClassName, classes.cellClassName)}
+				rowSpan={this.props.rowSpan}
 			/>
 		);
 	}

@@ -60,6 +60,7 @@ export class DataTableCategorySection<RowData extends object> extends React.Pure
 				return totalAccessor(data, category);
 			}
 
+			/* istanbul ignore next */
 			throw new Error("Invalid call to computeTotalData");
 		},
 	);
@@ -90,7 +91,7 @@ export class DataTableCategorySection<RowData extends object> extends React.Pure
 					selected={this.areAllCategoryRowsSelected(this.props)}
 				>
 					{
-						this.props.totalAccessor && !this.props.hideCategoryTotal ? (
+						this.props.totalAccessor && !this.props.hideCategoryTotal && this.props.data.length > 0 ? (
 							totalDatumToComponent(this.props, this.props.category, true)(this.computeTotalData(this.props))
 						) : undefined
 					}
@@ -132,7 +133,6 @@ export default class DataTableBody<RowData extends object = object> extends Reac
 	}
 
 	private onSelect = (selected: boolean, ...ids: string[]) => {
-		/* istanbul ignore if */
 		if (!this.props.onSelect) {
 			throw new Error("Invalid state: calling body's on select without a props' onSelect defined");
 		}
@@ -151,7 +151,7 @@ export default class DataTableBody<RowData extends object = object> extends Reac
 				className={classnames(tableBodyClassName, this.props.tableBodyClassName)}
 			>
 				{
-					this.props.totalAccessor && !this.props.hideBodyTotal ? (
+					this.props.totalAccessor && !this.props.hideBodyTotal && this.props.data.length > 0 ? (
 						totalDatumToComponent(this.props, "$total")(this.computeTotalData(this.props))
 					) : null
 				}

@@ -15,6 +15,7 @@ export interface IEmployee {
 	birthday: Date;
 	balance: number;
 	state: string | undefined;
+	oldRoles: string[] | undefined;
 	balanceDetails: {
 		credit: IBalance;
 		debit: IBalance;
@@ -50,7 +51,7 @@ function fakeBalance(): IBalance {
 
 faker.seed(0);
 
-export const employeeData: IEmployee[] = [...new Array(50)].map((_, i) => {
+export const employeeData: IEmployee[] = [...new Array(20)].map((_, i): IEmployee => {
 	const age = faker.random.number({ min: 18, max: 100 });
 
 	return {
@@ -61,6 +62,7 @@ export const employeeData: IEmployee[] = [...new Array(50)].map((_, i) => {
 		birthday: faker.date.past(age),
 		state: faker.random.arrayElement(stateRoles),
 		role: faker.random.arrayElement(employeeRoles),
+		oldRoles: faker.random.boolean() ? undefined : [...new Array(faker.random.number({ min: 1, max: 3 }))].map(() => faker.random.arrayElement(employeeRoles)),
 		balance: fakeMoney(),
 		balanceDetails: {
 			cash: fakeBalance(),

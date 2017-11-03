@@ -31,17 +31,21 @@ export interface IPropsOptions {
 
 	// totalizing
 	totalized?: boolean;
+	hideTotalRow?: boolean;
+	hideCategoryRow?: boolean;
 }
 
-const partialOptions: IPropsOptions[] = [
+interface INestedOptions extends IPropsOptions {
+	children?: INestedOptions[];
+}
+
+const partialOptions: INestedOptions[] = [
 	{ emptyData: true },
-	{ nestedColumns: true },
-	{ sortable: true },
-	{ defaultSort: true },
 	{ categories: true },
-	{ selectable: true },
-	{ undefinedSelected: true },
-	{ totalized: true },
+	{ nestedColumns: true },
+	{ sortable: true, children: [ { defaultSort: true } ] },
+	{ selectable: true, children: [ { undefinedSelected: true } ] },
+	{ totalized: true, children: [ { hideTotalRow: true }, { hideCategoryRow: true } ] },
 ];
 
 const optionsDescriptions: { [key in keyof IPropsOptions]: string } = {
@@ -53,6 +57,8 @@ const optionsDescriptions: { [key in keyof IPropsOptions]: string } = {
 	selectable: "selectable",
 	undefinedSelected: "undefined selectedRowsIds prop",
 	totalized: "total feature",
+	hideTotalRow: "hide table total row",
+	hideCategoryRow: "total category total row",
 };
 
 function generateBalanceColumns(options: IPropsOptions, idPrefix: string): ReadonlyArray<IColumn<IBalance>> {
@@ -118,6 +124,12 @@ function generateColumnsWithFeatures(options: IPropsOptions): ReadonlyArray<ICol
 			label: "Estado",
 			accessor: (row) => row.state,
 			sortFunction: options.sortable ? stringSorter : undefined,
+		},
+		{
+			id: "old roles",
+			label: "Cargos Antigos",
+			accessor: (row) => row.oldRoles,
+			renderCell: (roles: string[] | undefined) => roles || "nenhum",
 		},
 		{
 			id: "birthday",
@@ -260,16 +272,19 @@ function optionsToDescriptor(options: IPropsOptions): IDescriptedOptionProps {
 	};
 }
 
-function parseDescriptors(descriptors: IPropsOptions[]): IPropsOptions[] {
+function parseDescriptors(descriptors: INestedOptions[]): IPropsOptions[] {
 	if (descriptors.length === 0) {
 		return [{}];
 	} else {
 		const rootDescriptors = [...descriptors];
-		const current = rootDescriptors.splice(0, 1)[0];
+		const {children, ...current} = rootDescriptors.splice(0, 1)[0];
+		const childrenDescriptors = children || [];
 
 		const otherOptions = parseDescriptors(rootDescriptors);
+		const childrenOptions = parseDescriptors(childrenDescriptors);
+		const otherOptionsAndChildren = [...otherOptions, ...childrenOptions];
 
-		return [ ...otherOptions, ...otherOptions.map((options) => ({ ...options, ...current })) ];
+		return [ ...otherOptions, ...otherOptionsAndChildren.map((options) => ({ ...options, ...current })) ];
 	}
 }
 

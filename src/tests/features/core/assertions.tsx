@@ -156,7 +156,8 @@ function tableShouldHaveNRows<T extends object = object>(wrapper: ReactWrapper<I
 		expect(
 			wrapper
 				.find("tbody")
-				.find(DataTableRow),
+				.find(DataTableRow)
+				.not({ isAggregated: true }),
 		).to.have.length(n);
 	});
 }
@@ -170,13 +171,15 @@ function tableShouldHaveNColumns<T extends object = object>(wrapper: ReactWrappe
 }
 
 function tableRowsShouldHaveNCells<T extends object = object>(wrapper: ReactWrapper<IDataTableProps<T>>, n: number) {
-	it(`each row should have ${n} cells`, function() {
-		expect(
-			wrapper
-				.find("tbody")
-				.find(DataTableRow)
-				.everyWhere((row) => row.find(DataTableCell).length === n),
-		).to.be.true;
+	describe(`each row should have ${n} cells`, function() {
+		const rows = wrapper.find("tbody").find(DataTableRow).map((v) => v);
+
+		for (const i in rows) {
+			const row = rows[i];
+			it(`row #${i + 1}`, () => {
+				expect(row.find("tr").first().find(DataTableCell)).to.have.length(n);
+			});
+		}
 	});
 }
 

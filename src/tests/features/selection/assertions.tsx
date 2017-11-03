@@ -32,11 +32,12 @@ export function testTableRowSelectionWithProps<T extends object = object>(props:
 
 	if (props.selectable) {
 		describe("since is selectable", () => {
-			it("each row should have a DataTableBodySelectionCell", () => {
+			it("each data row should have a DataTableBodySelectionCell", () => {
 				expect(
 					wrapper
 						.find(DataTableBody)
 						.find(DataTableRow)
+						.not({ isAggregated: true })
 						.everyWhere((row) => row.find(DataTableBodySelectionCell).exists()),
 				).to.be.true;
 			});

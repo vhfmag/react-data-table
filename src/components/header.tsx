@@ -17,6 +17,7 @@ import * as React from "react";
 import { IColumn, IDataTableProps } from "..";
 import classnames from "classnames";
 import { createSelector } from "reselect";
+import { getColumnsMaxRowSpan } from "../utils/helpers/columns";
 
 export interface ISortArrowProps {
 	active: boolean;
@@ -122,7 +123,7 @@ export default class DataTableHeader<RowData extends object = object> extends Re
 	}
 
 	public render() {
-		// const rowSpan = getColumnsMaxRowSpan(this.props.columns);
+		const rowSpan = getColumnsMaxRowSpan(this.props.columns);
 		const parented = linkColumnsToParent(this.props.columns);
 		const leveled = getLeveledColumns(parented);
 		const colsByLevel = getColumnsByLevel(leveled);
@@ -141,6 +142,7 @@ export default class DataTableHeader<RowData extends object = object> extends Re
 								disabled={!this.props.data || this.props.data.length === 0}
 
 								headerCellClassName={this.props.headerCellClassName}
+								rowSpan={rowSpan}
 							/>
 						) : null
 					}
