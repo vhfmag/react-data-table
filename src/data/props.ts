@@ -58,7 +58,7 @@ const optionsDescriptions: { [key in keyof IPropsOptions]: string } = {
 	undefinedSelected: "undefined selectedRowsIds prop",
 	totalized: "total feature",
 	hideTotalRow: "hide table total row",
-	hideCategoryRow: "total category total row",
+	hideCategoryRow: "hide category total row",
 };
 
 function generateBalanceColumns(options: IPropsOptions, idPrefix: string): ReadonlyArray<IColumn<IBalance>> {
@@ -236,6 +236,8 @@ export function generatePropsWithFeatures(options: IPropsOptions): IDataTablePro
 					{},
 				)
 			: undefined,
+		hideBodyTotal: options.hideTotalRow,
+		hideCategoryTotal: options.hideCategoryRow,
 	};
 
 	return {
@@ -292,4 +294,4 @@ function parseDescriptors(descriptors: INestedOptions[]): IPropsOptions[] {
 }
 
 const allDescriptors = parseDescriptors(partialOptions);
-export const allOptions = allDescriptors.map(optionsToDescriptor);
+export const allOptions = allDescriptors.map(optionsToDescriptor).sort((a, b) => a.description.localeCompare(b.description));
