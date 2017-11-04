@@ -1,6 +1,9 @@
 import faker from "faker";
 import * as classes from "../utils/publicClassNames";
 
+faker.seed(123);
+faker.locale = "pt_BR";
+
 export interface IBalance {
 	toPay: number;
 	toReceive: number;
@@ -49,10 +52,8 @@ function fakeBalance(): IBalance {
 	};
 }
 
-faker.seed(0);
-
 export const employeeData: IEmployee[] = [...new Array(20)].map((_, i): IEmployee => {
-	const age = faker.random.number({ min: 18, max: 100 });
+	const age = faker.random.number({ min: 18, max: 50 });
 
 	return {
 		age,
