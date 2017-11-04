@@ -15,7 +15,13 @@ table.table {
         background-color: $main-blue;
         color: white;
 
-        th {
+        th, td {
+            padding: 4pt;
+        }
+    }
+
+    tbody {
+        th, td {
             padding: 4pt;
         }
     }
