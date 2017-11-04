@@ -57,7 +57,7 @@ function testTableContentWithProps<T extends object = object>(wrapper: ReactWrap
 			const cells = row.children();
 
 			for (let i = 0; i < cells.length; i++) {
-				const cell = cells.childAt(i);
+				const cell = cells.at(i);
 				const column = rowProps.columns[i];
 				const content = parseDatum(rowProps.datum, column);
 
