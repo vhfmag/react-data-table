@@ -48,7 +48,7 @@ export function testDataTableTotalFeatureWithProps<RowData extends object>(props
 			const categorySections = wrapper.find(DataTableCategorySection).map((v) => v);
 			for (const categorySection of categorySections) {
 				describe(`For category '${categorySection.props().category}'`, () => {
-					if (!categorySection.isEmpty()) {
+					if (categorySection.exists()) {
 						testForHiddenTotal(categorySection, props.hideCategoryTotal, "category");
 					}
 				});
