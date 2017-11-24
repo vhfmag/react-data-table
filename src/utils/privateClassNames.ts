@@ -6,3 +6,4 @@ export const ascendantSortArrowClassName = classNamePrefix + "sortArrow--ascenda
 export const descendantSortArrowClassName = classNamePrefix + "sortArrow--descendant";
 
 export const selectionCellClassName = classNamePrefix + "selectionCell";
+export const stickyHeaderClassName = classNamePrefix + "stickyHeader";
