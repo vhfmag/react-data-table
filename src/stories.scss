@@ -1,0 +1,11 @@
+body {
+    margin: 0;
+
+    :global(#root) {
+        padding: 4pt 4pt 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        overflow: auto;
+        box-sizing: border-box;
+    }
+}
